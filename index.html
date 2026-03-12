@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceUp — Employee Feedback Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:#F7F8FC; --bg2:#EFF1F8; --surface:#FFFFFF; --surface2:#F0F2FA;
+      --border:#E4E7F2; --border2:#D0D5EC;
+      --ink:#1A1D2E; --ink2:#3D4166; --muted:#7C82A8; --faint:#B0B6D3;
+      --blue:#4F6EF7; --blue-soft:#EEF1FE; --blue-glow:rgba(79,110,247,.18);
+      --teal:#38C9B0; --teal-soft:#E8FAF7;
+      --amber:#F5A623; --amber-soft:#FEF6E8;
+      --rose:#F25C7A; --rose-soft:#FEF0F3;
+      --violet:#8B5CF6; --violet-soft:#F0EBFE;
+      --green:#22C55E; --green-soft:#EDFAF3;
+      --r:10px; --r-lg:18px; --r-xl:24px;
+      --shadow-sm:0 1px 4px rgba(26,29,46,.06);
+      --shadow:0 4px 20px rgba(26,29,46,.08);
+      --shadow-lg:0 12px 48px rgba(26,29,46,.12);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+    h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;line-height:1.25;color:var(--ink)}
+    button{cursor:pointer;font-family:inherit}
+    input,textarea,select{font-family:inherit;font-size:14px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);color:var(--ink);padding:11px 14px;width:100%;transition:border-color .2s,box-shadow .2s,background .2s;outline:none;appearance:none}
+    input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-glow);background:var(--surface)}
+    input::placeholder,textarea::placeholder{color:var(--faint)}
+    select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237C82A8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+    select option{background:var(--surface);color:var(--ink)}
+    textarea{resize:vertical;min-height:100px}
+    label{font-size:12.5px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block;letter-spacing:.2px}
+
+    .hidden{display:none!important}
+    .w-full{width:100%}
+    .text-sm{font-size:13px} .text-xs{font-size:11.5px}
+    .muted{color:var(--muted)}
+    .mt-2{margin-top:8px} .mt-3{margin-top:14px} .mt-4{margin-top:20px}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--r);font-size:13.5px;font-weight:600;border:none;letter-spacing:.1px;transition:transform .12s,box-shadow .2s,opacity .15s;white-space:nowrap}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0) scale(.98)}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+    .btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(79,110,247,.35)}
+    .btn-primary:hover{box-shadow:0 6px 20px rgba(79,110,247,.45)}
+    .btn-ghost{background:var(--surface2);color:var(--ink2);border:1.5px solid var(--border)}
+    .btn-ghost:hover{background:var(--bg2);border-color:var(--border2)}
+    .btn-danger{background:var(--rose-soft);color:var(--rose);border:1.5px solid rgba(242,92,122,.2)}
+    .btn-danger:hover{background:rgba(242,92,122,.15)}
+    .btn-sm{padding:6px 13px;font-size:12.5px;border-radius:8px}
+
+    /* Cards */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;box-shadow:var(--shadow)}
+    .card-sm{padding:18px 22px;border-radius:var(--r-lg)}
+
+    /* Badges */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+    .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
+    .b-pending{background:var(--amber-soft);color:#C07D10;border:1px solid rgba(245,166,35,.25)}
+    .b-progress{background:var(--blue-soft);color:#3355D4;border:1px solid rgba(79,110,247,.2)}
+    .b-resolved{background:var(--green-soft);color:#16A34A;border:1px solid rgba(34,197,94,.2)}
+    .b-rejected{background:var(--rose-soft);color:#C8354F;border:1px solid rgba(242,92,122,.2)}
+    .b-complaint{background:var(--rose-soft);color:#C8354F;border:1px solid rgba(242,92,122,.15)}
+    .b-feedback{background:var(--blue-soft);color:#3355D4;border:1px solid rgba(79,110,247,.15)}
+    .b-suggestion{background:var(--teal-soft);color:#0F8C79;border:1px solid rgba(56,201,176,.2)}
+
+    /* Toasts */
+    #toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+    .toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 18px;font-size:13.5px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:11px;pointer-events:all;animation:toastIn .3s cubic-bezier(.34,1.56,.64,1);max-width:320px}
+    .toast-icon{font-size:18px;flex-shrink:0}
+    .toast.t-success{border-left:3px solid var(--green)}
+    .toast.t-error{border-left:3px solid var(--rose)}
+    .toast.t-info{border-left:3px solid var(--blue)}
+    @keyframes toastIn{from{opacity:0;transform:translateX(24px) scale(.96)}to{opacity:1;transform:translateX(0) scale(1)}}
+
+    /* Modals */
+    .overlay{position:fixed;inset:0;background:rgba(26,29,46,.4);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+    .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:modalIn .25s cubic-bezier(.34,1.56,.64,1)}
+    .modal-title{font-size:19px;font-weight:700;margin-bottom:6px}
+    .modal-sub{font-size:13px;color:var(--muted);margin-bottom:22px}
+    .modal-actions{display:flex;gap:10px;margin-top:6px}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+
+    /* ═══════════════════════════════════════════════
+       AUTH SCREEN
+    ═══════════════════════════════════════════════ */
+    #auth-screen{min-height:100vh;display:flex;background:var(--bg)}
+
+    .auth-panel{flex:1;background:linear-gradient(145deg,#4F6EF7 0%,#7B5CF5 55%,#38C9B0 100%);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:60px 56px;position:relative;overflow:hidden}
+    .auth-panel::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='300' cy='80' r='180' fill='rgba(255,255,255,.04)'/%3E%3Ccircle cx='60' cy='320' r='140' fill='rgba(255,255,255,.05)'/%3E%3Ccircle cx='200' cy='200' r='80' fill='rgba(255,255,255,.03)'/%3E%3C/svg%3E") center/cover}
+    .auth-panel-logo{font-family:'Instrument Serif',serif;font-size:42px;color:#fff;margin-bottom:14px;position:relative;letter-spacing:-.5px}
+    .auth-panel-tagline{font-size:16px;color:rgba(255,255,255,.82);font-weight:400;line-height:1.7;max-width:320px;position:relative}
+    .auth-panel-features{margin-top:44px;display:flex;flex-direction:column;gap:14px;position:relative}
+    .auth-feature{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.9);font-size:13.5px;font-weight:500}
+    .auth-feature-dot{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+
+    .auth-form-wrap{width:460px;display:flex;align-items:center;justify-content:center;padding:40px 48px;overflow-y:auto}
+    .auth-form-inner{width:100%}
+    .auth-heading{font-size:24px;font-weight:800;margin-bottom:4px}
+    .auth-sub{font-size:13.5px;color:var(--muted);margin-bottom:28px}
+
+    /* Role selector */
+    .role-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+    .role-btn{padding:14px 12px;background:var(--bg);border:2px solid var(--border);border-radius:var(--r-lg);cursor:pointer;text-align:center;transition:all .2s;position:relative;overflow:hidden}
+    .role-btn:hover{border-color:var(--blue);background:var(--blue-soft)}
+    .role-btn.active{border-color:var(--blue);background:var(--blue-soft);box-shadow:0 0 0 4px var(--blue-glow)}
+    .role-btn .r-icon{font-size:26px;display:block;margin-bottom:5px}
+    .role-btn .r-label{font-size:13px;font-weight:700;color:var(--ink2)}
+    .role-btn.active .r-label{color:var(--blue)}
+    .role-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--blue);display:none;align-items:center;justify-content:center}
+    .role-check svg{width:10px;height:10px}
+    .role-btn.active .role-check{display:flex}
+
+    /* Tabs */
+    .tab-row{display:flex;background:var(--bg2);border-radius:var(--r);padding:4px;gap:4px;margin-bottom:22px;border:1px solid var(--border)}
+    .tab-btn{flex:1;padding:9px;background:none;border:none;border-radius:7px;font-size:13px;font-weight:600;color:var(--muted);transition:all .2s;cursor:pointer}
+    .tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
+
+    /* Form */
+    .fg{margin-bottom:16px}
+    .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .err{font-size:11.5px;color:var(--rose);margin-top:4px;font-weight:500}
+
+    /* Input with icon */
+    .input-wrap{position:relative}
+    .input-wrap .i-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
+    .input-wrap input{padding-left:38px}
+    .input-wrap.has-toggle input{padding-right:44px}
+
+    /* Forgot link */
+    .forgot-link{font-size:12.5px;font-weight:600;color:var(--blue);text-decoration:none;opacity:.85;transition:opacity .15s}
+    .forgot-link:hover{opacity:1;text-decoration:underline}
+
+    /* Back button */
+    .back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;margin-bottom:20px;padding:0;transition:color .15s}
+    .back-btn:hover{color:var(--ink)}
+
+    /* ═══════════════════════════════════════════════
+       FORGOT PASSWORD — 3 step panels
+    ═══════════════════════════════════════════════ */
+
+    /* Step progress dots */
+    .fp-progress{display:flex;align-items:center;gap:0;margin-bottom:24px}
+    .fp-prog-step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
+    .fp-prog-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--faint);transition:all .3s}
+    .fp-prog-dot.active{border-color:var(--blue);background:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--blue-glow)}
+    .fp-prog-dot.done{border-color:var(--green);background:var(--green);color:#fff}
+    .fp-prog-label{font-size:10.5px;font-weight:600;color:var(--faint);text-align:center;transition:color .3s}
+    .fp-prog-label.active{color:var(--blue)}
+    .fp-prog-label.done{color:var(--green)}
+    .fp-prog-line{flex:1;height:2px;background:var(--border);margin:0 6px;margin-top:-20px;transition:background .3s;align-self:flex-start;margin-top:14px}
+    .fp-prog-line.done{background:var(--green)}
+
+    /* OTP input boxes */
+    .otp-row{display:flex;gap:9px;justify-content:center;margin:6px 0 4px}
+    .otp-box{
+      width:40px;height:52px;text-align:center;
+      font-size:20px;font-weight:800;letter-spacing:0;
+      border:2px solid var(--border);border-radius:var(--r-lg);
+      background:var(--surface);color:var(--ink);
+      outline:none;transition:border-color .2s,box-shadow .2s,background .2s,transform .15s;
+      padding:0;caret-color:var(--blue)
+    }
+    .otp-box:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-glow);background:var(--blue-soft);transform:scale(1.04)}
+    .otp-box.filled{border-color:var(--blue);background:var(--blue-soft)}
+    .otp-box.error{border-color:var(--rose);background:var(--rose-soft);animation:shake .3s ease}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+    /* OTP hint */
+    .otp-hint{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+
+    /* Resend row */
+    .resend-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:13px;color:var(--muted)}
+    .resend-btn{background:none;border:none;color:var(--blue);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;padding:0;transition:opacity .15s}
+    .resend-btn:disabled{color:var(--faint);cursor:default}
+    .resend-timer-badge{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:2px 9px;font-size:11.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+
+    /* Password strength */
+    .pw-wrap{position:relative}
+    .pw-toggle{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--faint);padding:0;transition:color .15s;line-height:1}
+    .pw-toggle:hover{color:var(--ink2)}
+    .pw-strength{margin-top:8px}
+    .pw-strength-bar{height:4px;border-radius:99px;background:var(--border2);overflow:hidden;margin-bottom:4px}
+    .pw-strength-fill{height:100%;border-radius:99px;transition:width .35s,background .35s;width:0}
+    .pw-strength-text{font-size:11.5px;font-weight:600}
+
+    /* Info box */
+    .info-box{display:flex;align-items:flex-start;gap:10px;background:var(--blue-soft);border:1px solid rgba(79,110,247,.2);border-radius:var(--r);padding:12px 14px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+    .info-box-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+    /* Success screen */
+    .success-screen{text-align:center;padding:10px 0 6px;animation:fadeIn .3s ease}
+    .success-icon-wrap{width:72px;height:72px;border-radius:50%;background:var(--green-soft);border:2px solid rgba(34,197,94,.25);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px}
+    .success-title{font-size:20px;font-weight:800;margin-bottom:6px}
+    .success-sub{font-size:13.5px;color:var(--muted);line-height:1.65}
+
+    /* ═══════════════════════════════════════════════
+       APP LAYOUT
+    ═══════════════════════════════════════════════ */
+    #app-screen{display:flex;min-height:100vh}
+    .sidebar{width:248px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);padding:24px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;box-shadow:2px 0 12px rgba(26,29,46,.04)}
+    .sb-logo{font-family:'Instrument Serif',serif;font-size:24px;color:var(--blue);padding:0 10px;margin-bottom:4px;letter-spacing:-.3px}
+    .sb-badge{display:inline-flex;align-items:center;gap:6px;margin:0 10px 22px;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);background:var(--bg2);border:1px solid var(--border);padding:4px 10px 4px 8px;border-radius:99px}
+    .sb-section{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--faint);padding:0 12px;margin:14px 0 6px}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .15s;position:relative}
+    .nav-item:hover{background:var(--bg2);color:var(--ink2)}
+    .nav-item.active{background:var(--blue-soft);color:var(--blue);font-weight:600}
+    .nav-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+    .sb-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+    .sb-user{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r);margin-bottom:6px}
+    .sb-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+    .sb-uname{font-size:13px;font-weight:600;color:var(--ink)}
+    .sb-uemail{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+    .main{flex:1;padding:36px 40px;overflow-y:auto;max-width:960px}
+    .ph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;flex-wrap:wrap;gap:14px}
+    .ph-title{font-size:27px;font-weight:800;letter-spacing:-.4px}
+    .ph-sub{font-size:13.5px;color:var(--muted);margin-top:3px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--shadow-sm);transition:box-shadow .2s,transform .2s}
+    .stat-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+    .stat-icon{font-size:22px;margin-bottom:10px}
+    .stat-val{font-size:34px;font-weight:800;line-height:1;letter-spacing:-1px}
+    .stat-lbl{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
+    .c-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 24px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s,transform .15s;position:relative}
+    .c-card:hover{border-color:var(--border2);box-shadow:var(--shadow);transform:translateY(-1px)}
+    .c-card::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:99px;background:var(--blue);opacity:0;transition:opacity .2s}
+    .c-card:hover::before{opacity:1}
+    .c-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .c-title{font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:6px}
+    .c-badges{display:flex;gap:6px;flex-wrap:wrap}
+    .c-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px}
+    .c-meta-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);font-weight:500}
+    .c-desc{font-size:13.5px;color:var(--ink2);margin-top:12px;line-height:1.65}
+    .admin-note{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(135deg,var(--blue-soft),rgba(79,110,247,.04));border:1px solid rgba(79,110,247,.15);border-radius:var(--r);padding:12px 14px;margin-top:14px}
+    .admin-note-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+    .admin-note-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-bottom:3px}
+    .admin-note-text{font-size:13px;color:var(--ink2);line-height:1.6}
+    .c-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+    .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+    .filter-sel{width:auto;min-width:145px;padding:8px 12px;font-size:13px;border-radius:var(--r)}
+    .filter-count{font-size:12px;color:var(--muted);margin-left:auto;font-weight:500}
+    .empty{text-align:center;padding:64px 20px;color:var(--muted)}
+    .empty-icon{font-size:52px;margin-bottom:14px;opacity:.35}
+    .empty h3{font-size:17px;font-weight:700;margin-bottom:6px;color:var(--ink2)}
+    .empty p{font-size:13.5px}
+    .spin{width:22px;height:22px;border:2.5px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spinning .65s linear infinite;display:inline-block}
+    @keyframes spinning{to{transform:rotate(360deg)}}
+    .loading-wrap{display:flex;align-items:center;justify-content:center;gap:10px;padding:48px;color:var(--muted);font-size:13.5px}
+    .live-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--green);background:var(--green-soft);border:1px solid rgba(34,197,94,.2);padding:4px 10px;border-radius:99px}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:livePulse 1.8s infinite}
+    @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+    .check-label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--ink2);padding:12px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);transition:all .2s}
+    .check-label:hover{border-color:var(--blue);background:var(--blue-soft)}
+    .check-label input{width:16px;height:16px;flex-shrink:0;accent-color:var(--blue)}
+    .dash-tip{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--blue-soft),rgba(139,92,246,.06));border:1px solid rgba(79,110,247,.18);border-radius:var(--r-lg);padding:16px 20px;margin-top:6px}
+    .dash-tip-icon{font-size:22px;flex-shrink:0}
+    .dash-tip-text{font-size:13.5px;color:var(--ink2);line-height:1.6}
+    .dash-tip-text strong{color:var(--blue)}
+    .section-sep{height:1px;background:var(--border);margin:24px 0}
+    .recent-label{font-size:17px;font-weight:700;margin-bottom:14px}
+
+    @media(max-width:900px){.auth-panel{display:none}.auth-form-wrap{width:100%;padding:40px 28px}.stats{grid-template-columns:1fr 1fr}}
+    @media(max-width:680px){.sidebar{display:none}.main{padding:20px}.stats{grid-template-columns:1fr 1fr}}
+    @media(max-width:440px){.stats{grid-template-columns:1fr}.otp-box{width:32px;height:42px;font-size:16px}.otp-row{gap:5px}}
+  </style>
+</head>
+<body>
+
+<div id="toast-wrap"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     AUTH SCREEN
+═══════════════════════════════════════════════════════ -->
+<div id="auth-screen">
+
+  <!-- Left panel -->
+  <div class="auth-panel">
+    <div class="auth-panel-logo">VoiceUp</div>
+    <div class="auth-panel-tagline">A safe space for employees to share feedback, raise concerns, and drive change.</div>
+    <div class="auth-panel-features">
+      <div class="auth-feature"><div class="auth-feature-dot">🔒</div>Anonymous submissions supported</div>
+      <div class="auth-feature"><div class="auth-feature-dot">⚡</div>Real-time status updates</div>
+      <div class="auth-feature"><div class="auth-feature-dot">🏢</div>Department-level routing</div>
+      <div class="auth-feature"><div class="auth-feature-dot">✅</div>Full audit trail</div>
+    </div>
+  </div>
+
+  <!-- Right form -->
+  <div class="auth-form-wrap">
+    <div class="auth-form-inner">
+
+      <!-- ─── VIEW A: Normal login / signup ─── -->
+      <div id="view-main">
+        <div class="auth-heading">Welcome back</div>
+        <div class="auth-sub">Sign in or create your account below</div>
+
+        <div class="role-wrap">
+          <div class="role-btn active" id="role-employee" onclick="selectRole('employee')">
+            <div class="role-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="r-icon">👤</span><div class="r-label">Employee</div>
+          </div>
+          <div class="role-btn" id="role-admin" onclick="selectRole('admin')">
+            <div class="role-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="r-icon">🛡️</span><div class="r-label">Admin</div>
+          </div>
+        </div>
+
+        <div class="tab-row">
+          <button class="tab-btn active" id="tab-login"  onclick="switchTab('login')">Sign In</button>
+          <button class="tab-btn"        id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+        </div>
+
+        <!-- Login -->
+        <div id="login-form">
+          <div class="fg">
+            <label>Email address</label>
+            <div class="input-wrap"><span class="i-icon">✉️</span>
+              <input type="email" id="login-email" placeholder="you@company.com" />
+            </div>
+          </div>
+          <div class="fg">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <label style="margin-bottom:0">Password</label>
+              <a href="#" class="forgot-link" onclick="showView('fp');return false">Forgot password?</a>
+            </div>
+            <div class="input-wrap pw-wrap has-toggle">
+              <span class="i-icon">🔑</span>
+              <input type="password" id="login-password" placeholder="••••••••" />
+              <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)">👁️</button>
+            </div>
+          </div>
+          <button class="btn btn-primary w-full mt-3" id="login-btn" onclick="handleLogin()">Sign In →</button>
+        </div>
+
+        <!-- Signup -->
+        <div id="signup-form" class="hidden">
+          <div class="fg"><label>Full Name</label>
+            <div class="input-wrap"><span class="i-icon">✏️</span><input type="text" id="signup-name" placeholder="Jane Smith" /></div>
+          </div>
+          <div class="fg"><label>Email address</label>
+            <div class="input-wrap"><span class="i-icon">✉️</span><input type="email" id="signup-email" placeholder="you@company.com" /></div>
+          </div>
+          <div class="fg">
+            <label>Password <span style="color:var(--faint);font-weight:400">(min 6 chars)</span></label>
+            <div class="input-wrap pw-wrap has-toggle">
+              <span class="i-icon">🔑</span>
+              <input type="password" id="signup-password" placeholder="••••••••" oninput="checkStrength(this.value)" />
+              <button type="button" class="pw-toggle" onclick="togglePw('signup-password',this)">👁️</button>
+            </div>
+            <div class="pw-strength" id="signup-strength" style="display:none">
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="signup-strength-fill"></div></div>
+              <span class="pw-strength-text" id="signup-strength-text"></span>
+            </div>
+          </div>
+          <button class="btn btn-primary w-full mt-3" id="signup-btn" onclick="handleSignup()">Create Account →</button>
+        </div>
+
+        <p class="text-sm muted mt-3" style="text-align:center">
+          <span id="switch-text">Don't have an account?</span>
+          <a href="#" id="switch-link" onclick="switchTab(currentTab==='login'?'signup':'login');return false"
+             style="color:var(--blue);font-weight:600;margin-left:5px;text-decoration:none">Sign up</a>
+        </p>
+      </div><!-- /view-main -->
+
+
+      <!-- ─── VIEW B: Forgot Password (3 steps inside one view) ─── -->
+      <!--
+        HOW THIS WORKS (beginner explanation):
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        STEP 1 — User enters their email.
+                 We call Supabase's signInWithOtp() which sends a
+                 6-digit OTP code to that email. No redirect link.
+
+        STEP 2 — User types the 6-digit OTP code into the 6 boxes.
+                 We call Supabase's verifyOtp() to check if the code
+                 is correct. If yes, Supabase logs them in silently
+                 and gives us a session — but we DON'T show the app.
+                 We move to step 3 instead.
+
+        STEP 3 — User types new password + confirms it.
+                 We call sb.auth.updateUser({ password: newPassword })
+                 which updates it using the active session from step 2.
+                 Then we sign them out and send them to the login screen.
+      -->
+      <div id="view-fp" class="hidden">
+
+        <button class="back-btn" onclick="showView('main')">← Back to Sign In</button>
+
+        <!-- Progress indicator (3 dots) -->
+        <div class="fp-progress">
+          <div class="fp-prog-step">
+            <div class="fp-prog-dot active" id="prog-dot-1">1</div>
+            <div class="fp-prog-label active" id="prog-lbl-1">Email</div>
+          </div>
+          <div class="fp-prog-line" id="prog-line-1"></div>
+          <div class="fp-prog-step">
+            <div class="fp-prog-dot" id="prog-dot-2">2</div>
+            <div class="fp-prog-label" id="prog-lbl-2">Verify OTP</div>
+          </div>
+          <div class="fp-prog-line" id="prog-line-2"></div>
+          <div class="fp-prog-step">
+            <div class="fp-prog-dot" id="prog-dot-3">3</div>
+            <div class="fp-prog-label" id="prog-lbl-3">New Password</div>
+          </div>
+        </div>
+
+        <!-- STEP 1: Email entry -->
+        <div id="fp-s1">
+          <div style="margin-bottom:20px">
+            <div class="auth-heading" style="font-size:21px">Reset your password</div>
+            <div class="auth-sub" style="margin-bottom:0">We'll send an 8-digit OTP to your email. No links, no redirects.</div>
+          </div>
+          <div class="fg">
+            <label>Your registered email</label>
+            <div class="input-wrap"><span class="i-icon">✉️</span>
+              <input type="email" id="fp-email" placeholder="you@company.com"
+                     onkeydown="if(event.key==='Enter')sendOtp()" />
+            </div>
+            <div class="err hidden" id="fp-email-err">⚠ Please enter a valid email address.</div>
+          </div>
+          <div class="info-box mt-2" style="margin-bottom:16px">
+            <span class="info-box-icon">💡</span>
+            <span>An <strong>8-digit OTP code</strong> will arrive in a "Reset Password" email. Copy the number and enter it on the next screen — no links to click.</span>
+          </div>
+          <button class="btn btn-primary w-full" id="fp-send-btn" onclick="sendOtp()">Send OTP Code →</button>
+        </div>
+
+        <!-- STEP 2: OTP verification -->
+        <div id="fp-s2" class="hidden">
+          <div style="margin-bottom:20px">
+            <div class="auth-heading" style="font-size:21px">Enter the OTP</div>
+            <div class="auth-sub" style="margin-bottom:0">Check your email — we sent an 8-digit code to <strong id="fp-otp-email-display" style="color:var(--ink)"></strong></div>
+          </div>
+
+          <!-- 8 individual OTP boxes -->
+          <div class="otp-row">
+            <input class="otp-box" id="otp-0" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" id="otp-1" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" id="otp-2" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" id="otp-3" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" id="otp-4" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" id="otp-5" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" id="otp-6" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" id="otp-7" type="text" inputmode="numeric" maxlength="1" />
+          </div>
+          <div class="otp-hint">Type the 8-digit code from your email</div>
+          <div class="err hidden" style="text-align:center;margin-top:6px" id="otp-err">⚠ Invalid OTP. Please check and try again.</div>
+
+          <button class="btn btn-primary w-full mt-3" id="fp-verify-btn" onclick="verifyOtp()" disabled>Verify OTP →</button>
+
+          <!-- Resend with countdown -->
+          <div class="resend-row">
+            <span>Didn't receive it?</span>
+            <button class="resend-btn" id="resend-btn" onclick="resendOtp()" disabled>
+              Resend in <span class="resend-timer-badge"><span id="resend-secs">60</span>s</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: New password -->
+        <div id="fp-s3" class="hidden">
+          <div style="margin-bottom:20px">
+            <div class="auth-heading" style="font-size:21px">Set new password</div>
+            <div class="auth-sub" style="margin-bottom:0">Identity verified ✅ — choose a strong new password below.</div>
+          </div>
+          <div class="fg">
+            <label>New Password</label>
+            <div class="input-wrap pw-wrap has-toggle">
+              <span class="i-icon">🔑</span>
+              <input type="password" id="new-pw" placeholder="At least 8 characters"
+                     oninput="checkStrength(this.value,'new-pw-fill','new-pw-text','new-pw-strength')" />
+              <button type="button" class="pw-toggle" onclick="togglePw('new-pw',this)">👁️</button>
+            </div>
+            <div class="pw-strength" id="new-pw-strength" style="display:none">
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="new-pw-fill"></div></div>
+              <span class="pw-strength-text" id="new-pw-text"></span>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Confirm New Password</label>
+            <div class="input-wrap pw-wrap has-toggle">
+              <span class="i-icon">🔑</span>
+              <input type="password" id="confirm-pw" placeholder="Re-enter password" />
+              <button type="button" class="pw-toggle" onclick="togglePw('confirm-pw',this)">👁️</button>
+            </div>
+            <div class="err hidden" id="pw-match-err">⚠ Passwords do not match.</div>
+            <div class="err hidden" id="pw-len-err">⚠ Password must be at least 8 characters.</div>
+          </div>
+          <button class="btn btn-primary w-full mt-2" id="fp-update-btn" onclick="updatePassword()">Update Password →</button>
+        </div>
+
+      </div><!-- /view-fp -->
+
+    </div>
+  </div>
+</div><!-- /auth-screen -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     APP SCREEN (completely unchanged)
+═══════════════════════════════════════════════════════ -->
+<div id="app-screen" class="hidden">
+  <aside class="sidebar">
+    <div class="sb-logo">VoiceUp</div>
+    <div class="sb-badge"><span class="sb-dot"></span><span id="sb-role-text">Employee</span></div>
+    <div class="sb-section">Navigation</div>
+    <nav id="employee-nav">
+      <button class="nav-item active" data-page="my-complaints" onclick="showPage('my-complaints')"><span class="nav-icon">📋</span> My Complaints</button>
+      <button class="nav-item" data-page="submit-complaint" onclick="showPage('submit-complaint')"><span class="nav-icon">✍️</span> Submit New</button>
+    </nav>
+    <nav id="admin-nav" class="hidden">
+      <button class="nav-item active" data-page="admin-dashboard" onclick="showPage('admin-dashboard')"><span class="nav-icon">📊</span> Dashboard</button>
+      <button class="nav-item" data-page="all-complaints" onclick="showPage('all-complaints')"><span class="nav-icon">📋</span> All Complaints</button>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sb-avatar">U</div>
+        <div><div class="sb-uname" id="sb-name">Loading…</div><div class="sb-uemail" id="sb-email"></div></div>
+      </div>
+      <button class="nav-item" onclick="handleLogout()" style="color:var(--rose)"><span class="nav-icon">🚪</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="page-my-complaints" class="page">
+      <div class="ph">
+        <div><div class="ph-title">My Complaints</div><div class="ph-sub">Track all your submitted feedback and complaints</div></div>
+        <div class="live-badge"><span class="live-dot"></span> Live updates</div>
+      </div>
+      <div id="my-complaints-list"><div class="loading-wrap"><span class="spin"></span> Loading your complaints…</div></div>
+    </div>
+
+    <div id="page-submit-complaint" class="page hidden">
+      <div class="ph"><div><div class="ph-title">Submit Feedback</div><div class="ph-sub">Your voice matters — we'll make sure it's heard</div></div></div>
+      <div class="card" style="max-width:580px">
+        <div class="fg-row">
+          <div class="fg"><label>Type</label><select id="complaint-type"><option value="Complaint">🚨 Complaint</option><option value="Feedback">💬 Feedback</option><option value="Suggestion">💡 Suggestion</option></select></div>
+          <div class="fg"><label>Department</label><select id="complaint-dept"><option value="">Select department…</option></select></div>
+        </div>
+        <div class="fg"><label>Title <span style="color:var(--rose)">*</span></label><input type="text" id="complaint-title" placeholder="Brief summary of your issue" maxlength="100" /><div class="err hidden" id="err-title">⚠ Please enter a title.</div></div>
+        <div class="fg">
+          <label>Description <span style="color:var(--rose)">*</span></label>
+          <textarea id="complaint-desc" rows="5" placeholder="Describe the issue in detail…" maxlength="1000"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+            <div class="err hidden" id="err-desc">⚠ Description must be at least 20 characters.</div>
+            <span class="text-xs muted" id="char-count" style="margin-left:auto">0 / 1000</span>
+          </div>
+        </div>
+        <div class="fg"><label class="check-label"><input type="checkbox" id="complaint-anon" />🎭 Submit anonymously — your name won't be shown to admins</label></div>
+        <button class="btn btn-primary" id="submit-btn" onclick="submitComplaint()" style="width:100%;justify-content:center">Submit Complaint →</button>
+      </div>
+    </div>
+
+    <div id="page-admin-dashboard" class="page hidden">
+      <div class="ph">
+        <div><div class="ph-title">Dashboard</div><div class="ph-sub">Overview of all employee complaints across departments</div></div>
+        <div class="live-badge"><span class="live-dot"></span> Live updates</div>
+      </div>
+      <div class="stats">
+        <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="stat-total">—</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" id="stat-pending" style="color:var(--amber)">—</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-val" id="stat-progress" style="color:var(--blue)">—</div><div class="stat-lbl">In Progress</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" id="stat-resolved" style="color:var(--green)">—</div><div class="stat-lbl">Resolved</div></div>
+      </div>
+      <div class="dash-tip"><div class="dash-tip-icon">💡</div><div class="dash-tip-text">Head to <strong>All Complaints</strong> to review, assign and update statuses. Employees see changes in real-time.</div></div>
+      <div class="section-sep"></div>
+      <div class="recent-label">Recent Activity</div>
+      <div id="dash-recent"><div class="loading-wrap"><span class="spin"></span></div></div>
+    </div>
+
+    <div id="page-all-complaints" class="page hidden">
+      <div class="ph">
+        <div><div class="ph-title">All Complaints</div><div class="ph-sub">Manage, assign and resolve employee feedback</div></div>
+        <div class="live-badge"><span class="live-dot"></span> Live updates</div>
+      </div>
+      <div class="filters">
+        <select class="filter-sel" id="filter-status" onchange="applyFilters()"><option value="">All Statuses</option><option value="Pending">Pending</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Rejected">Rejected</option></select>
+        <select class="filter-sel" id="filter-dept" onchange="applyFilters()"><option value="">All Departments</option></select>
+        <select class="filter-sel" id="filter-type" onchange="applyFilters()"><option value="">All Types</option><option value="Complaint">Complaint</option><option value="Feedback">Feedback</option><option value="Suggestion">Suggestion</option></select>
+        <span class="filter-count" id="filter-count"></span>
+      </div>
+      <div id="all-complaints-list"><div class="loading-wrap"><span class="spin"></span> Loading complaints…</div></div>
+    </div>
+  </main>
+</div>
+
+<!-- Modals (unchanged) -->
+<div class="overlay hidden" id="edit-modal" onclick="overlayClick(event,'edit-modal')">
+  <div class="modal">
+    <div class="modal-title">Edit Complaint</div><div class="modal-sub">You can only edit complaints that are still Pending.</div>
+    <input type="hidden" id="edit-id" />
+    <div class="fg"><label>Title</label><input type="text" id="edit-title" maxlength="100" /></div>
+    <div class="fg"><label>Description</label><textarea id="edit-desc" rows="5" maxlength="1000"></textarea></div>
+    <div class="fg"><label>Department</label><select id="edit-dept"></select></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveEdit()">Save Changes</button><button class="btn btn-ghost" onclick="closeModal('edit-modal')">Cancel</button></div>
+  </div>
+</div>
+<div class="overlay hidden" id="status-modal" onclick="overlayClick(event,'status-modal')">
+  <div class="modal">
+    <div class="modal-title">Update Complaint</div><div class="modal-sub">Changes are pushed to the employee in real-time via WebSocket.</div>
+    <input type="hidden" id="status-modal-id" />
+    <div class="fg-row">
+      <div class="fg"><label>Assign Department</label><select id="status-dept"></select></div>
+      <div class="fg"><label>Status</label><select id="status-value"><option value="Pending">⏳ Pending</option><option value="In Progress">🔄 In Progress</option><option value="Resolved">✅ Resolved</option><option value="Rejected">❌ Rejected</option></select></div>
+    </div>
+    <div class="fg"><label>Admin Notes <span style="color:var(--faint);font-weight:400">(visible to employee)</span></label><textarea id="status-notes" rows="3" placeholder="Add a note or update for the employee…"></textarea></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveStatus()">Save Update</button><button class="btn btn-ghost" onclick="closeModal('status-modal')">Cancel</button></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════ -->
+<script type="module">
+const SUPABASE_URL  = 'https://hvsrrkpdnzlynffomnlu.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_kKdHvqFvokWh8RRjeP9cOw_8oxrKEK4';
+
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+/* ─── App state ─────────────────────────────────────────── */
+const S = { user:null, profile:null, role:null, departments:[], complaints:[], sub:null };
+let currentRole = 'employee';
+let currentTab  = 'login';
+
+/* ─── Forgot-password state ─────────────────────────────── */
+let fpEmail             = '';    // email the user typed in step 1
+let resendTimer         = null;  // setInterval handle
+let isResettingPassword = false; // flag: blocks onLogin during OTP reset flow
+
+/* ─── Global exposure ───────────────────────────────────── */
+Object.assign(window, {
+  // existing
+  selectRole, switchTab, handleLogin, handleSignup, handleLogout,
+  showPage, submitComplaint, openEditModal, saveEdit,
+  openStatusModal, saveStatus, closeModal, overlayClick, applyFilters, deleteComplaint,
+  // new
+  showView, sendOtp, verifyOtp, resendOtp, updatePassword,
+  togglePw, checkStrength
+});
+window.currentTab = currentTab;
+
+/* ════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════ */
+async function init() {
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) await onLogin(session.user);
+
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_OUT') { onLogout(); return; }
+    // If we're in the middle of OTP password-reset, never load the app
+    if (isResettingPassword) return;
+    if (session && !S.user) await onLogin(session.user);
+  });
+
+  document.getElementById('complaint-desc').addEventListener('input', function() {
+    document.getElementById('char-count').textContent = `${this.value.length} / 1000`;
+  });
+
+  /* Wire up the 6 OTP boxes — smart auto-advance & paste */
+  wireOtpBoxes();
+}
+
+/* ════════════════════════════════════════════════════════
+   VIEW SWITCHING — simple helper to show one auth "panel"
+   Panels: 'main' | 'fp'
+════════════════════════════════════════════════════════ */
+function showView(v) {
+  document.getElementById('view-main').classList.toggle('hidden', v !== 'main');
+  document.getElementById('view-fp').classList.toggle('hidden',   v !== 'fp');
+
+  if (v === 'fp') {
+    // Always start at step 1 when entering forgot-password view
+    goFpStep(1);
+    document.getElementById('fp-email').value = '';
+    document.getElementById('fp-email-err').classList.add('hidden');
+    clearOtpBoxes();
+    clearResendTimer();
+  }
+
+  if (v === 'main') {
+    // Lower the reset flag so normal login works again
+    isResettingPassword = false;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   FORGOT PASSWORD — Step navigation helper
+════════════════════════════════════════════════════════ */
+function goFpStep(step) {
+  // Show/hide step panels
+  [1, 2, 3].forEach(n => {
+    document.getElementById(`fp-s${n}`).classList.toggle('hidden', n !== step);
+  });
+
+  // Update progress dots
+  [1, 2, 3].forEach(n => {
+    const dot = document.getElementById(`prog-dot-${n}`);
+    const lbl = document.getElementById(`prog-lbl-${n}`);
+    dot.className = 'fp-prog-dot ' + (n < step ? 'done' : n === step ? 'active' : '');
+    dot.textContent = n < step ? '✓' : n;
+    lbl.className = 'fp-prog-label ' + (n < step ? 'done' : n === step ? 'active' : '');
+  });
+
+  // Update connector lines
+  [1, 2].forEach(n => {
+    document.getElementById(`prog-line-${n}`).classList.toggle('done', step > n);
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   STEP 1 — Send OTP
+   ─────────────────────────────────────────────────────
+   HOW THIS ACTUALLY WORKS:
+   ─────────────────────────────────────────────────────
+   We use resetPasswordForEmail() — this is Supabase's
+   password-recovery function. It triggers the "Reset
+   Password" email template in your Supabase dashboard.
+
+   By default that template contains a magic link.
+   BUT — if you edit the template to include {{ .Token }}
+   Supabase will put the 6-digit OTP code in the email
+   instead. The user copies that number, types it here,
+   and we verify it with type:'recovery'.
+
+   ⚙️  ONE-TIME SETUP (do this once in Supabase):
+   ────────────────────────────────────────────────
+   1. Supabase Dashboard → Authentication → Email Templates
+   2. Click "Reset Password" template
+   3. Replace the body with:
+      <h2>Reset your VoiceUp password</h2>
+      <p>Your OTP code is:</p>
+      <h1 style="letter-spacing:8px;font-size:40px;font-weight:bold">
+        {{ .Token }}
+      </h1>
+      <p>Expires in 1 hour. Do not share this code.</p>
+   4. Save ✅
+
+   After that, every password-reset email will show a
+   plain 6-digit number instead of a link.
+════════════════════════════════════════════════════════ */
+async function sendOtp() {
+  const email = document.getElementById('fp-email').value.trim();
+
+  if (!email || !email.includes('@')) {
+    document.getElementById('fp-email-err').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('fp-email-err').classList.add('hidden');
+
+  setBtnLoad('fp-send-btn', true, 'Sending OTP…');
+
+  // resetPasswordForEmail triggers the "Reset Password" email template.
+  // With {{ .Token }} in that template, Supabase emails a 6-digit code.
+  // We pass a dummy redirectTo so Supabase doesn't complain — the user
+  // never actually clicks any link; they type the OTP code instead.
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.href   // required param but never used
+  });
+
+  setBtnLoad('fp-send-btn', false, 'Send OTP Code →');
+
+  if (error) {
+    toast(error.message, 'error');
+    return;
+  }
+
+  fpEmail = email;
+  document.getElementById('fp-otp-email-display').textContent = email;
+  clearOtpBoxes();
+  goFpStep(2);
+  document.getElementById('otp-0').focus();
+  startResendCountdown();
+  toast('OTP sent! Check your inbox 📬', 'success');
+}
+
+/* ════════════════════════════════════════════════════════
+   STEP 2 — Verify OTP
+   ─────────────────────────────────────────────────────
+   CRITICAL: type must be 'recovery' here — not 'email'.
+   resetPasswordForEmail() sends a recovery-type token.
+   Using the wrong type causes "invalid OTP" errors even
+   when the code is correct. This was the root bug.
+
+   If verified, Supabase creates a session silently.
+   We do NOT call onLogin() — we stay on the reset flow
+   and use that session only for updateUser() in step 3.
+════════════════════════════════════════════════════════ */
+async function verifyOtp() {
+  const token = [0,1,2,3,4,5,6,7].map(i => document.getElementById(`otp-${i}`).value).join('');
+
+  if (token.length < 8) { toast('Please enter all 8 digits.', 'error'); return; }
+
+  setBtnLoad('fp-verify-btn', true, 'Verifying…');
+
+  // Raise flag BEFORE the API call — onAuthStateChange fires during verifyOtp
+  // and we must block onLogin() before that happens
+  isResettingPassword = true;
+
+  const { data, error } = await sb.auth.verifyOtp({
+    email: fpEmail,
+    token,
+    type: 'recovery'   // ← MUST be 'recovery' for resetPasswordForEmail OTPs
+  });
+
+  setBtnLoad('fp-verify-btn', false, 'Verify OTP →');
+
+  if (error) {
+    isResettingPassword = false; // lower flag so back button works normally
+    [0,1,2,3,4,5,6,7].forEach(i => {
+      const box = document.getElementById(`otp-${i}`);
+      box.classList.add('error');
+      setTimeout(() => box.classList.remove('error'), 400);
+    });
+    document.getElementById('otp-err').classList.remove('hidden');
+    toast('Invalid OTP code. Please try again.', 'error');
+    return;
+  }
+
+  // OTP is correct — Supabase has given us a session
+  // Store user reference but DON'T call onLogin() yet
+  // (we don't want to show the portal, just use the session for updateUser)
+  document.getElementById('otp-err').classList.add('hidden');
+  clearResendTimer();
+  goFpStep(3);
+  document.getElementById('new-pw').focus();
+  toast('Identity verified ✅ Now set your new password.', 'success');
+}
+
+/* ════════════════════════════════════════════════════════
+   STEP 3 — Update Password
+   ─────────────────────────────────────────────────────
+   At this point Supabase has a valid session (from step 2).
+   updateUser({ password }) uses that session to change
+   the password. Then we sign out and return to login.
+════════════════════════════════════════════════════════ */
+async function updatePassword() {
+  const newPw  = document.getElementById('new-pw').value;
+  const confPw = document.getElementById('confirm-pw').value;
+
+  document.getElementById('pw-match-err').classList.add('hidden');
+  document.getElementById('pw-len-err').classList.add('hidden');
+
+  if (newPw.length < 8) { document.getElementById('pw-len-err').classList.remove('hidden'); return; }
+  if (newPw !== confPw)  { document.getElementById('pw-match-err').classList.remove('hidden'); return; }
+
+  setBtnLoad('fp-update-btn', true, 'Updating password…');
+
+  const { error } = await sb.auth.updateUser({ password: newPw });
+
+  setBtnLoad('fp-update-btn', false, 'Update Password →');
+
+  if (error) { toast(error.message, 'error'); return; }
+
+  // Password updated — sign out, lower flag, return to login
+  await sb.auth.signOut();
+  isResettingPassword = false;
+  fpEmail = '';
+  showView('main');
+  switchTab('login');
+  document.getElementById('login-email').value    = '';
+  document.getElementById('login-password').value = '';
+}
+
+/* ════════════════════════════════════════════════════════
+   RESEND OTP with countdown
+════════════════════════════════════════════════════════ */
+async function resendOtp() {
+  const { error } = await sb.auth.resetPasswordForEmail(fpEmail, {
+    redirectTo: window.location.href
+  });
+  if (error) { toast(error.message, 'error'); return; }
+  clearOtpBoxes();
+  document.getElementById('otp-err').classList.add('hidden');
+  document.getElementById('otp-0').focus();
+  startResendCountdown();
+  toast('New OTP sent! Check your inbox.', 'success');
+}
+
+function startResendCountdown() {
+  let secs = 60;
+  const secsEl = document.getElementById('resend-secs');
+  const btnEl  = document.getElementById('resend-btn');
+  btnEl.disabled = true;
+
+  clearResendTimer();
+  resendTimer = setInterval(() => {
+    secs--;
+    if (secs <= 0) {
+      clearInterval(resendTimer); resendTimer = null;
+      btnEl.disabled = false;
+      btnEl.innerHTML = 'Resend OTP';
+    } else {
+      secsEl.textContent = secs;
+      btnEl.innerHTML = `Resend in <span class="resend-timer-badge"><span id="resend-secs">${secs}</span>s</span>`;
+    }
+  }, 1000);
+}
+
+function clearResendTimer() {
+  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+}
+
+/* ════════════════════════════════════════════════════════
+   OTP BOX WIRING
+   Auto-advance to next box, handle backspace, handle paste
+════════════════════════════════════════════════════════ */
+function wireOtpBoxes() {
+  for (let i = 0; i < 8; i++) {
+    const box = document.getElementById(`otp-${i}`);
+
+    box.addEventListener('input', e => {
+      const val = e.target.value.replace(/\D/g, '');   // digits only
+      e.target.value = val ? val[val.length - 1] : ''; // keep only 1 digit
+      e.target.classList.toggle('filled', !!e.target.value);
+
+      // Auto-advance
+      if (e.target.value && i < 5) document.getElementById(`otp-${i + 1}`).focus();
+
+      // Enable/disable verify button
+      const full = [0,1,2,3,4,5,6,7].every(n => document.getElementById(`otp-${n}`).value);
+      document.getElementById('fp-verify-btn').disabled = !full;
+    });
+
+    box.addEventListener('keydown', e => {
+      // Backspace — clear current and go back
+      if (e.key === 'Backspace' && !e.target.value && i > 0) {
+        document.getElementById(`otp-${i - 1}`).focus();
+      }
+      // Enter when all filled
+      if (e.key === 'Enter') {
+        const full = [0,1,2,3,4,5,6,7].every(n => document.getElementById(`otp-${n}`).value);
+        if (full) verifyOtp();
+      }
+    });
+
+    // Paste handler — e.g. user copies "123456" and pastes in first box
+    box.addEventListener('paste', e => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      if (!pasted) return;
+      [...pasted.slice(0, 8)].forEach((ch, idx) => {
+        const b = document.getElementById(`otp-${idx}`);
+        if (b) { b.value = ch; b.classList.add('filled'); }
+      });
+      const next = Math.min(pasted.length, 7);
+      document.getElementById(`otp-${next}`).focus();
+      const full = [0,1,2,3,4,5,6,7].every(n => document.getElementById(`otp-${n}`).value);
+      document.getElementById('fp-verify-btn').disabled = !full;
+    });
+  }
+}
+
+function clearOtpBoxes() {
+  [0,1,2,3,4,5,6,7].forEach(i => {
+    const b = document.getElementById(`otp-${i}`);
+    b.value = ''; b.classList.remove('filled','error');
+  });
+  document.getElementById('fp-verify-btn').disabled = true;
+}
+
+/* ════════════════════════════════════════════════════════
+   PASSWORD VISIBILITY TOGGLE
+════════════════════════════════════════════════════════ */
+function togglePw(id, btn) {
+  const input = document.getElementById(id); if (!input) return;
+  const hidden = input.type === 'password';
+  input.type   = hidden ? 'text' : 'password';
+  btn.textContent = hidden ? '🙈' : '👁️';
+}
+
+/* ════════════════════════════════════════════════════════
+   PASSWORD STRENGTH METER
+════════════════════════════════════════════════════════ */
+function checkStrength(val,
+  fillId   = 'signup-strength-fill',
+  textId   = 'signup-strength-text',
+  wrapId   = 'signup-strength') {
+  const wrap = document.getElementById(wrapId); if (!wrap) return;
+  if (!val) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  let score = 0;
+  if (val.length >= 8)          score++;
+  if (/[A-Z]/.test(val))        score++;
+  if (/[0-9]/.test(val))        score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const lvls = [
+    { t:'Too short', c:'#EF4444', p:'15%' },
+    { t:'Weak',      c:'#F97316', p:'35%' },
+    { t:'Fair',      c:'#F59E0B', p:'60%' },
+    { t:'Good',      c:'#3B82F6', p:'80%' },
+    { t:'Strong 💪', c:'#22C55E', p:'100%' }
+  ];
+  const l = lvls[score] || lvls[0];
+  const f = document.getElementById(fillId); const t = document.getElementById(textId);
+  if (f) { f.style.width = l.p; f.style.background = l.c; }
+  if (t) { t.textContent = l.t; t.style.color = l.c; }
+}
+
+/* ════════════════════════════════════════════════════════
+   ALL EXISTING FUNCTIONS — UNCHANGED
+════════════════════════════════════════════════════════ */
+function selectRole(r) {
+  currentRole = r;
+  document.getElementById('role-employee').classList.toggle('active', r === 'employee');
+  document.getElementById('role-admin').classList.toggle('active', r === 'admin');
+}
+
+function switchTab(tab) {
+  currentTab = tab; window.currentTab = tab;
+  document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', tab !== 'login');
+  document.getElementById('switch-text').textContent = tab === 'login' ? "Don't have an account?" : "Already have an account?";
+  document.getElementById('switch-link').textContent = tab === 'login' ? 'Sign up' : 'Sign in';
+}
+
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
+  if (!email || !pass) { toast('Please fill in all fields.', 'error'); return; }
+
+  setBtnLoad('login-btn', true, 'Signing in…');
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  setBtnLoad('login-btn', false, 'Sign In →');
+  if (error) { toast(error.message, 'error'); return; }
+
+  const uid = data.user.id;
+  if (currentRole === 'employee') {
+    const { data: adminRow } = await sb.from('admin_users').select('id').eq('id', uid).single();
+    if (adminRow)  { await sb.auth.signOut(); toast('This account belongs to an Admin. Please select the Admin role.', 'error'); return; }
+    const { data: empRow } = await sb.from('employees').select('id').eq('id', uid).single();
+    if (!empRow)   { await sb.auth.signOut(); toast('No employee profile found for this account.', 'error'); return; }
+  }
+  if (currentRole === 'admin') {
+    const { data: adminRow } = await sb.from('admin_users').select('id').eq('id', uid).single();
+    if (!adminRow) { await sb.auth.signOut(); toast('This account is not an Admin. Please select the Employee role.', 'error'); return; }
+  }
+}
+
+async function handleSignup() {
+  const name  = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass  = document.getElementById('signup-password').value;
+  if (!name)                          { toast('Please enter your full name.', 'error'); return; }
+  if (!email || !email.includes('@')) { toast('Please enter a valid email.', 'error'); return; }
+  if (pass.length < 6)                { toast('Password must be at least 6 characters.', 'error'); return; }
+  setBtnLoad('signup-btn', true, 'Creating account…');
+  const { error } = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name, role: currentRole } } });
+  setBtnLoad('signup-btn', false, 'Create Account →');
+  if (error) toast(error.message, 'error');
+  else       toast('Account created! Check your email to confirm.', 'success');
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  onLogout();
+}
+
+async function onLogin(user) {
+  // isResettingPassword flag blocks this during OTP reset flow
+  if (isResettingPassword) return;
+
+  S.user = user;
+  const { data: adminRow } = await sb.from('admin_users').select('*').eq('id', user.id).single();
+  if (adminRow) { S.role = 'admin'; S.profile = adminRow; }
+  else {
+    const { data: empRow } = await sb.from('employees').select('*').eq('id', user.id).single();
+    S.role = 'employee'; S.profile = empRow || { full_name: user.email, email: user.email };
+  }
+  await loadDepartments();
+  document.getElementById('auth-screen').classList.add('hidden');
+  document.getElementById('app-screen').classList.remove('hidden');
+  const name = S.profile?.full_name || 'User';
+  document.getElementById('sb-name').textContent     = name;
+  document.getElementById('sb-email').textContent    = S.profile?.email || '';
+  document.getElementById('sb-avatar').textContent   = name.charAt(0).toUpperCase();
+  document.getElementById('sb-role-text').textContent = S.role === 'admin' ? 'Admin' : 'Employee';
+  document.getElementById('employee-nav').classList.toggle('hidden', S.role !== 'employee');
+  document.getElementById('admin-nav').classList.toggle('hidden', S.role !== 'admin');
+  showPage(S.role === 'admin' ? 'admin-dashboard' : 'my-complaints');
+  setupRealtime();
+  toast(`Welcome back, ${name.split(' ')[0]}! 👋`, 'success');
+}
+
+function onLogout() {
+  S.user = S.profile = S.role = null;
+  if (S.sub) sb.removeChannel(S.sub);
+  document.getElementById('auth-screen').classList.remove('hidden');
+  document.getElementById('app-screen').classList.add('hidden');
+  showView('main');
+}
+
+function setupRealtime() {
+  if (S.sub) sb.removeChannel(S.sub);
+  S.sub = sb.channel('complaints-rt')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'complaints' }, () => {
+      if (S.role === 'employee') loadMyComplaints();
+      else { loadAdminDashboard(); loadAllComplaints(); }
+    }).subscribe();
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById(`page-${id}`)?.classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === id));
+  if      (id === 'my-complaints')    loadMyComplaints();
+  else if (id === 'all-complaints')   loadAllComplaints();
+  else if (id === 'admin-dashboard')  loadAdminDashboard();
+  else if (id === 'submit-complaint') loadDepartments();
+}
+
+async function loadDepartments() {
+  const { data } = await sb.from('departments').select('*').order('name');
+  S.departments = data || [];
+  ['complaint-dept','edit-dept','status-dept','filter-dept'].forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    const isFilter = id === 'filter-dept';
+    el.innerHTML = `<option value="">${isFilter ? 'All Departments' : 'Select department…'}</option>`;
+    S.departments.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.name; el.appendChild(o); });
+  });
+}
+const deptName = id => S.departments.find(d => d.id === id)?.name || '—';
+
+async function loadMyComplaints() {
+  const { data, error } = await sb.from('complaints').select('*').eq('employee_id', S.user.id).order('created_at', { ascending: false });
+  if (error) { toast('Failed to load complaints.', 'error'); return; }
+  S.complaints = data || []; renderMine(S.complaints);
+}
+
+function renderMine(list) {
+  const el = document.getElementById('my-complaints-list');
+  if (!list.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><h3>Nothing here yet</h3><p>You haven't submitted any complaints.<br><a href="#" onclick="showPage('submit-complaint');return false" style="color:var(--blue);font-weight:600">Submit your first one →</a></p></div>`; return; }
+  el.innerHTML = list.map(c => `
+    <div class="c-card">
+      <div class="c-header"><div><div class="c-title">${esc(c.title)}</div><div class="c-badges">${sBadge(c.status)} ${tBadge(c.type)}</div></div></div>
+      <div class="c-meta"><span class="c-meta-item">🏢 ${deptName(c.department_id)}</span><span class="c-meta-item">📅 ${fmtDate(c.created_at)}</span>${c.is_anonymous ? '<span class="c-meta-item">🎭 Anonymous</span>' : ''}</div>
+      <div class="c-desc">${esc(c.description)}</div>
+      ${c.admin_notes ? `<div class="admin-note"><div class="admin-note-icon">📌</div><div><div class="admin-note-label">Admin Update</div><div class="admin-note-text">${esc(c.admin_notes)}</div></div></div>` : ''}
+      ${c.status === 'Pending' ? `<div class="c-actions"><button class="btn btn-ghost btn-sm" onclick="openEditModal('${c.id}')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteComplaint('${c.id}')">🗑 Delete</button></div>` : ''}
+    </div>`).join('');
+}
+
+async function submitComplaint() {
+  const title = document.getElementById('complaint-title').value.trim();
+  const desc  = document.getElementById('complaint-desc').value.trim();
+  const type  = document.getElementById('complaint-type').value;
+  const dept  = document.getElementById('complaint-dept').value;
+  const anon  = document.getElementById('complaint-anon').checked;
+  let ok = true;
+  ['err-title','err-desc'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  if (!title)           { document.getElementById('err-title').classList.remove('hidden'); ok = false; }
+  if (desc.length < 20) { document.getElementById('err-desc').classList.remove('hidden');  ok = false; }
+  if (!ok) return;
+  setBtnLoad('submit-btn', true, 'Submitting…');
+  const { error } = await sb.from('complaints').insert({ employee_id: S.user.id, department_id: dept || null, title, description: desc, type, is_anonymous: anon, status: 'Pending' });
+  setBtnLoad('submit-btn', false, 'Submit Complaint →');
+  if (error) { toast('Failed to submit: ' + error.message, 'error'); return; }
+  toast('Complaint submitted! 🎉', 'success');
+  document.getElementById('complaint-title').value = '';
+  document.getElementById('complaint-desc').value  = '';
+  document.getElementById('char-count').textContent = '0 / 1000';
+  document.getElementById('complaint-anon').checked = false;
+  showPage('my-complaints');
+}
+
+function openEditModal(id) {
+  const c = S.complaints.find(x => x.id === id); if (!c) return;
+  document.getElementById('edit-id').value    = c.id;
+  document.getElementById('edit-title').value = c.title;
+  document.getElementById('edit-desc').value  = c.description;
+  loadDepartments().then(() => { document.getElementById('edit-dept').value = c.department_id || ''; });
+  document.getElementById('edit-modal').classList.remove('hidden');
+}
+async function saveEdit() {
+  const id = document.getElementById('edit-id').value;
+  const title = document.getElementById('edit-title').value.trim();
+  const desc  = document.getElementById('edit-desc').value.trim();
+  const dept  = document.getElementById('edit-dept').value;
+  if (!title || desc.length < 20) { toast('Please fill all fields correctly.', 'error'); return; }
+  const { error } = await sb.from('complaints').update({ title, description: desc, department_id: dept || null }).eq('id', id).eq('employee_id', S.user.id).eq('status', 'Pending');
+  if (error) toast('Update failed: ' + error.message, 'error');
+  else { toast('Complaint updated!', 'success'); closeModal('edit-modal'); loadMyComplaints(); }
+}
+
+async function deleteComplaint(id) {
+  if (!confirm('Delete this complaint? This cannot be undone.')) return;
+  const { error } = await sb.from('complaints').delete().eq('id', id).eq('employee_id', S.user.id).eq('status', 'Pending');
+  if (error) toast('Delete failed: ' + error.message, 'error');
+  else { toast('Complaint deleted.', 'info'); loadMyComplaints(); }
+}
+
+async function loadAdminDashboard() {
+  const { data } = await sb.from('complaints').select('status, created_at, title, type, id').order('created_at', { ascending: false });
+  const all = data || [];
+  const count = s => all.filter(c => c.status === s).length;
+  document.getElementById('stat-total').textContent    = all.length;
+  document.getElementById('stat-pending').textContent  = count('Pending');
+  document.getElementById('stat-progress').textContent = count('In Progress');
+  document.getElementById('stat-resolved').textContent = count('Resolved');
+  const el = document.getElementById('dash-recent');
+  const recent = all.slice(0, 3);
+  if (!recent.length) { el.innerHTML = '<p class="muted text-sm">No complaints yet.</p>'; return; }
+  el.innerHTML = recent.map(c => `<div class="c-card card-sm" style="margin-bottom:10px"><div class="c-header"><div class="c-title" style="font-size:14px">${esc(c.title)}</div><div>${sBadge(c.status)}</div></div><div class="c-meta" style="margin-top:8px"><span class="c-meta-item">📅 ${fmtDate(c.created_at)}</span><span class="c-meta-item">${tBadge(c.type)}</span></div></div>`).join('');
+}
+
+async function loadAllComplaints() {
+  const { data, error } = await sb.from('complaints').select('*, employees(full_name,email), departments(name)').order('created_at', { ascending: false });
+  if (error) { toast('Failed to load.', 'error'); return; }
+  S.complaints = data || []; applyFilters();
+}
+
+function applyFilters() {
+  const sf = document.getElementById('filter-status')?.value || '';
+  const df = document.getElementById('filter-dept')?.value   || '';
+  const tf = document.getElementById('filter-type')?.value   || '';
+  let list = S.complaints;
+  if (sf) list = list.filter(c => c.status === sf);
+  if (df) list = list.filter(c => c.department_id === df);
+  if (tf) list = list.filter(c => c.type === tf);
+  const countEl = document.getElementById('filter-count');
+  if (countEl) countEl.textContent = `${list.length} complaint${list.length !== 1 ? 's' : ''}`;
+  renderAdmin(list);
+}
+
+function renderAdmin(list) {
+  const el = document.getElementById('all-complaints-list');
+  if (!list.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><h3>No results</h3><p>No complaints match the selected filters.</p></div>`; return; }
+  el.innerHTML = list.map(c => `
+    <div class="c-card">
+      <div class="c-header"><div style="flex:1"><div class="c-title">${esc(c.title)}</div><div class="c-badges">${sBadge(c.status)} ${tBadge(c.type)}</div></div><button class="btn btn-ghost btn-sm" onclick="openStatusModal('${c.id}')">⚙️ Update</button></div>
+      <div class="c-meta"><span class="c-meta-item">👤 ${c.is_anonymous ? '🎭 Anonymous' : esc(c.employees?.full_name || '—')}</span><span class="c-meta-item">🏢 ${c.departments?.name || deptName(c.department_id)}</span><span class="c-meta-item">📅 ${fmtDate(c.created_at)}</span><span class="c-meta-item">🔄 Updated ${fmtDate(c.updated_at)}</span></div>
+      <div class="c-desc">${esc(c.description)}</div>
+      ${c.admin_notes ? `<div class="admin-note"><div class="admin-note-icon">📌</div><div><div class="admin-note-label">Admin Notes</div><div class="admin-note-text">${esc(c.admin_notes)}</div></div></div>` : ''}
+    </div>`).join('');
+}
+
+function openStatusModal(id) {
+  const c = S.complaints.find(x => x.id === id); if (!c) return;
+  document.getElementById('status-modal-id').value = c.id;
+  document.getElementById('status-value').value    = c.status;
+  document.getElementById('status-notes').value    = c.admin_notes || '';
+  loadDepartments().then(() => { document.getElementById('status-dept').value = c.department_id || ''; });
+  document.getElementById('status-modal').classList.remove('hidden');
+}
+async function saveStatus() {
+  const id     = document.getElementById('status-modal-id').value;
+  const status = document.getElementById('status-value').value;
+  const notes  = document.getElementById('status-notes').value.trim();
+  const dept   = document.getElementById('status-dept').value;
+  const { error } = await sb.from('complaints').update({ status, admin_notes: notes || null, department_id: dept || null, admin_id: S.user.id }).eq('id', id);
+  if (error) toast('Update failed: ' + error.message, 'error');
+  else { toast(`Status → "${status}" ✅`, 'success'); closeModal('status-modal'); loadAllComplaints(); loadAdminDashboard(); }
+}
+
+function closeModal(id)  { document.getElementById(id)?.classList.add('hidden'); }
+function overlayClick(e,id) { if (e.target === e.currentTarget) closeModal(id); }
+
+function setBtnLoad(id, loading, txt) {
+  const b = document.getElementById(id); if (!b) return;
+  b.disabled = loading;
+  b.innerHTML = loading ? `<span class="spin" style="width:16px;height:16px;border-width:2px"></span> ${txt}` : txt;
+}
+
+function toast(msg, type = 'info') {
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const el = document.createElement('div');
+  el.className = `toast t-${type}`;
+  el.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${msg}</span>`;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(() => el.remove(), 4200);
+}
+
+function sBadge(s) { const m={'Pending':'b-pending','In Progress':'b-progress','Resolved':'b-resolved','Rejected':'b-rejected'}; return `<span class="badge ${m[s]||''}">${s}</span>`; }
+function tBadge(t) { const m={'Complaint':'b-complaint','Feedback':'b-feedback','Suggestion':'b-suggestion'}; return `<span class="badge ${m[t]||''}">${t}</span>`; }
+function fmtDate(s) { if (!s) return '—'; return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function esc(s) { if (!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+init();
+</script>
+</body>
+</html>
