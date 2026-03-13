@@ -6,338 +6,96 @@
   <title>VoiceUp — Employee Feedback Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700;800;900&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="app.css" />
-
-  <!-- Inline styles moved to app.css -->
-  <!--
-  <style>
-    :root {
-      --bg:#F7F8FC; --bg2:#EFF1F8; --surface:#FFFFFF; --surface2:#F0F2FA;
-      --border:#E4E7F2; --border2:#D0D5EC;
-      --ink:#1A1D2E; --ink2:#3D4166; --muted:#7C82A8; --faint:#B0B6D3;
-      --blue:#4F6EF7; --blue-soft:#EEF1FE; --blue-glow:rgba(79,110,247,.18);
-      --teal:#38C9B0; --teal-soft:#E8FAF7;
-      --amber:#F5A623; --amber-soft:#FEF6E8;
-      --rose:#F25C7A; --rose-soft:#FEF0F3;
-      --violet:#8B5CF6; --violet-soft:#F0EBFE;
-      --green:#22C55E; --green-soft:#EDFAF3;
-      --r:10px; --r-lg:18px; --r-xl:24px;
-      --shadow-sm:0 1px 4px rgba(26,29,46,.06);
-      --shadow:0 4px 20px rgba(26,29,46,.08);
-      --shadow-lg:0 12px 48px rgba(26,29,46,.12);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
-    h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;line-height:1.25;color:var(--ink)}
-    button{cursor:pointer;font-family:inherit}
-    input,textarea,select{font-family:inherit;font-size:14px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);color:var(--ink);padding:11px 14px;width:100%;transition:border-color .2s,box-shadow .2s,background .2s;outline:none;appearance:none}
-    input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-glow);background:var(--surface)}
-    input::placeholder,textarea::placeholder{color:var(--faint)}
-    select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237C82A8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
-    select option{background:var(--surface);color:var(--ink)}
-    textarea{resize:vertical;min-height:100px}
-    label{font-size:12.5px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block;letter-spacing:.2px}
-
-    .hidden{display:none!important}
-    .w-full{width:100%}
-    .text-sm{font-size:13px} .text-xs{font-size:11.5px}
-    .muted{color:var(--muted)}
-    .mt-2{margin-top:8px} .mt-3{margin-top:14px} .mt-4{margin-top:20px}
-
-    /* Buttons */
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--r);font-size:13.5px;font-weight:600;border:none;letter-spacing:.1px;transition:transform .12s,box-shadow .2s,opacity .15s;white-space:nowrap}
-    .btn:hover{transform:translateY(-1px)}
-    .btn:active{transform:translateY(0) scale(.98)}
-    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
-    .btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(79,110,247,.35)}
-    .btn-primary:hover{box-shadow:0 6px 20px rgba(79,110,247,.45)}
-    .btn-ghost{background:var(--surface2);color:var(--ink2);border:1.5px solid var(--border)}
-    .btn-ghost:hover{background:var(--bg2);border-color:var(--border2)}
-    .btn-danger{background:var(--rose-soft);color:var(--rose);border:1.5px solid rgba(242,92,122,.2)}
-    .btn-danger:hover{background:rgba(242,92,122,.15)}
-    .btn-sm{padding:6px 13px;font-size:12.5px;border-radius:8px}
-
-    /* Cards */
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;box-shadow:var(--shadow)}
-    .card-sm{padding:18px 22px;border-radius:var(--r-lg)}
-
-    /* Badges */
-    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-    .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
-    .b-pending{background:var(--amber-soft);color:#C07D10;border:1px solid rgba(245,166,35,.25)}
-    .b-progress{background:var(--blue-soft);color:#3355D4;border:1px solid rgba(79,110,247,.2)}
-    .b-resolved{background:var(--green-soft);color:#16A34A;border:1px solid rgba(34,197,94,.2)}
-    .b-rejected{background:var(--rose-soft);color:#C8354F;border:1px solid rgba(242,92,122,.2)}
-    .b-complaint{background:var(--rose-soft);color:#C8354F;border:1px solid rgba(242,92,122,.15)}
-    .b-feedback{background:var(--blue-soft);color:#3355D4;border:1px solid rgba(79,110,247,.15)}
-    .b-suggestion{background:var(--teal-soft);color:#0F8C79;border:1px solid rgba(56,201,176,.2)}
-
-    /* Toasts */
-    #toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
-    .toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 18px;font-size:13.5px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:11px;pointer-events:all;animation:toastIn .3s cubic-bezier(.34,1.56,.64,1);max-width:320px}
-    .toast-icon{font-size:18px;flex-shrink:0}
-    .toast.t-success{border-left:3px solid var(--green)}
-    .toast.t-error{border-left:3px solid var(--rose)}
-    .toast.t-info{border-left:3px solid var(--blue)}
-    @keyframes toastIn{from{opacity:0;transform:translateX(24px) scale(.96)}to{opacity:1;transform:translateX(0) scale(1)}}
-
-    /* Modals */
-    .overlay{position:fixed;inset:0;background:rgba(26,29,46,.4);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
-    .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:modalIn .25s cubic-bezier(.34,1.56,.64,1)}
-    .modal-title{font-size:19px;font-weight:700;margin-bottom:6px}
-    .modal-sub{font-size:13px;color:var(--muted);margin-bottom:22px}
-    .modal-actions{display:flex;gap:10px;margin-top:6px}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
-
-    /* ═══════════════════════════════════════════════
-       AUTH SCREEN
-    ═══════════════════════════════════════════════ */
-    #auth-screen{min-height:100vh;display:flex;background:var(--bg)}
-
-    .auth-panel{flex:1;background:linear-gradient(145deg,#4F6EF7 0%,#7B5CF5 55%,#38C9B0 100%);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:60px 56px;position:relative;overflow:hidden}
-    .auth-panel::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='300' cy='80' r='180' fill='rgba(255,255,255,.04)'/%3E%3Ccircle cx='60' cy='320' r='140' fill='rgba(255,255,255,.05)'/%3E%3Ccircle cx='200' cy='200' r='80' fill='rgba(255,255,255,.03)'/%3E%3C/svg%3E") center/cover}
-    .auth-panel-logo{font-family:'Instrument Serif',serif;font-size:42px;color:#fff;margin-bottom:14px;position:relative;letter-spacing:-.5px}
-    .auth-panel-tagline{font-size:16px;color:rgba(255,255,255,.82);font-weight:400;line-height:1.7;max-width:320px;position:relative}
-    .auth-panel-features{margin-top:44px;display:flex;flex-direction:column;gap:14px;position:relative}
-    .auth-feature{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.9);font-size:13.5px;font-weight:500}
-    .auth-feature-dot{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-
-    .auth-form-wrap{width:460px;display:flex;align-items:center;justify-content:center;padding:40px 48px;overflow-y:auto}
-    .auth-form-inner{width:100%}
-    .auth-heading{font-size:24px;font-weight:800;margin-bottom:4px}
-    .auth-sub{font-size:13.5px;color:var(--muted);margin-bottom:28px}
-
-    /* Role selector */
-    .role-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
-    .role-btn{padding:14px 12px;background:var(--bg);border:2px solid var(--border);border-radius:var(--r-lg);cursor:pointer;text-align:center;transition:all .2s;position:relative;overflow:hidden}
-    .role-btn:hover{border-color:var(--blue);background:var(--blue-soft)}
-    .role-btn.active{border-color:var(--blue);background:var(--blue-soft);box-shadow:0 0 0 4px var(--blue-glow)}
-    .role-btn .r-icon{font-size:26px;display:block;margin-bottom:5px}
-    .role-btn .r-label{font-size:13px;font-weight:700;color:var(--ink2)}
-    .role-btn.active .r-label{color:var(--blue)}
-    .role-check{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--blue);display:none;align-items:center;justify-content:center}
-    .role-check svg{width:10px;height:10px}
-    .role-btn.active .role-check{display:flex}
-
-    /* Tabs */
-    .tab-row{display:flex;background:var(--bg2);border-radius:var(--r);padding:4px;gap:4px;margin-bottom:22px;border:1px solid var(--border)}
-    .tab-btn{flex:1;padding:9px;background:none;border:none;border-radius:7px;font-size:13px;font-weight:600;color:var(--muted);transition:all .2s;cursor:pointer}
-    .tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
-
-    /* Form */
-    .fg{margin-bottom:16px}
-    .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .err{font-size:11.5px;color:var(--rose);margin-top:4px;font-weight:500}
-
-    /* Input with icon */
-    .input-wrap{position:relative}
-    .input-wrap .i-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
-    .input-wrap input{padding-left:38px}
-    .input-wrap.has-toggle input{padding-right:44px}
-
-    /* Forgot link */
-    .forgot-link{font-size:12.5px;font-weight:600;color:var(--blue);text-decoration:none;opacity:.85;transition:opacity .15s}
-    .forgot-link:hover{opacity:1;text-decoration:underline}
-
-    /* Back button */
-    .back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;margin-bottom:20px;padding:0;transition:color .15s}
-    .back-btn:hover{color:var(--ink)}
-
-    /* ═══════════════════════════════════════════════
-       FORGOT PASSWORD — 3 step panels
-    ═══════════════════════════════════════════════ */
-
-    /* Step progress dots */
-    .fp-progress{display:flex;align-items:center;gap:0;margin-bottom:24px}
-    .fp-prog-step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
-    .fp-prog-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--faint);transition:all .3s}
-    .fp-prog-dot.active{border-color:var(--blue);background:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--blue-glow)}
-    .fp-prog-dot.done{border-color:var(--green);background:var(--green);color:#fff}
-    .fp-prog-label{font-size:10.5px;font-weight:600;color:var(--faint);text-align:center;transition:color .3s}
-    .fp-prog-label.active{color:var(--blue)}
-    .fp-prog-label.done{color:var(--green)}
-    .fp-prog-line{flex:1;height:2px;background:var(--border);margin:0 6px;margin-top:-20px;transition:background .3s;align-self:flex-start;margin-top:14px}
-    .fp-prog-line.done{background:var(--green)}
-
-    /* OTP input boxes */
-    .otp-row{display:flex;gap:9px;justify-content:center;margin:6px 0 4px}
-    .otp-box{
-      width:40px;height:52px;text-align:center;
-      font-size:20px;font-weight:800;letter-spacing:0;
-      border:2px solid var(--border);border-radius:var(--r-lg);
-      background:var(--surface);color:var(--ink);
-      outline:none;transition:border-color .2s,box-shadow .2s,background .2s,transform .15s;
-      padding:0;caret-color:var(--blue)
-    }
-    .otp-box:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-glow);background:var(--blue-soft);transform:scale(1.04)}
-    .otp-box.filled{border-color:var(--blue);background:var(--blue-soft)}
-    .otp-box.error{border-color:var(--rose);background:var(--rose-soft);animation:shake .3s ease}
-    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-
-    /* OTP hint */
-    .otp-hint{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
-
-    /* Resend row */
-    .resend-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:13px;color:var(--muted)}
-    .resend-btn{background:none;border:none;color:var(--blue);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;padding:0;transition:opacity .15s}
-    .resend-btn:disabled{color:var(--faint);cursor:default}
-    .resend-timer-badge{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:2px 9px;font-size:11.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
-
-    /* Password strength */
-    .pw-wrap{position:relative}
-    .pw-toggle{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--faint);padding:0;transition:color .15s;line-height:1}
-    .pw-toggle:hover{color:var(--ink2)}
-    .pw-strength{margin-top:8px}
-    .pw-strength-bar{height:4px;border-radius:99px;background:var(--border2);overflow:hidden;margin-bottom:4px}
-    .pw-strength-fill{height:100%;border-radius:99px;transition:width .35s,background .35s;width:0}
-    .pw-strength-text{font-size:11.5px;font-weight:600}
-
-    /* Info box */
-    .info-box{display:flex;align-items:flex-start;gap:10px;background:var(--blue-soft);border:1px solid rgba(79,110,247,.2);border-radius:var(--r);padding:12px 14px;font-size:12.5px;color:var(--ink2);line-height:1.6}
-    .info-box-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-
-    /* Success screen */
-    .success-screen{text-align:center;padding:10px 0 6px;animation:fadeIn .3s ease}
-    .success-icon-wrap{width:72px;height:72px;border-radius:50%;background:var(--green-soft);border:2px solid rgba(34,197,94,.25);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px}
-    .success-title{font-size:20px;font-weight:800;margin-bottom:6px}
-    .success-sub{font-size:13.5px;color:var(--muted);line-height:1.65}
-
-    /* ═══════════════════════════════════════════════
-       APP LAYOUT
-    ═══════════════════════════════════════════════ */
-    #app-screen{display:flex;min-height:100vh}
-    .sidebar{width:248px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);padding:24px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;box-shadow:2px 0 12px rgba(26,29,46,.04)}
-    .sb-logo{font-family:'Instrument Serif',serif;font-size:24px;color:var(--blue);padding:0 10px;margin-bottom:4px;letter-spacing:-.3px}
-    .sb-badge{display:inline-flex;align-items:center;gap:6px;margin:0 10px 22px;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);background:var(--bg2);border:1px solid var(--border);padding:4px 10px 4px 8px;border-radius:99px}
-    .sb-section{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--faint);padding:0 12px;margin:14px 0 6px}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .15s;position:relative}
-    .nav-item:hover{background:var(--bg2);color:var(--ink2)}
-    .nav-item.active{background:var(--blue-soft);color:var(--blue);font-weight:600}
-    .nav-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
-    .sb-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
-    .sb-user{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r);margin-bottom:6px}
-    .sb-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
-    .sb-uname{font-size:13px;font-weight:600;color:var(--ink)}
-    .sb-uemail{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
-    .main{flex:1;padding:36px 40px;overflow-y:auto;max-width:960px}
-    .ph{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;flex-wrap:wrap;gap:14px}
-    .ph-title{font-size:27px;font-weight:800;letter-spacing:-.4px}
-    .ph-sub{font-size:13.5px;color:var(--muted);margin-top:3px}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--shadow-sm);transition:box-shadow .2s,transform .2s}
-    .stat-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
-    .stat-icon{font-size:22px;margin-bottom:10px}
-    .stat-val{font-size:34px;font-weight:800;line-height:1;letter-spacing:-1px}
-    .stat-lbl{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
-    .c-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 24px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s,transform .15s;position:relative}
-    .c-card:hover{border-color:var(--border2);box-shadow:var(--shadow);transform:translateY(-1px)}
-    .c-card::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:99px;background:var(--blue);opacity:0;transition:opacity .2s}
-    .c-card:hover::before{opacity:1}
-    .c-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
-    .c-title{font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:6px}
-    .c-badges{display:flex;gap:6px;flex-wrap:wrap}
-    .c-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px}
-    .c-meta-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);font-weight:500}
-    .c-desc{font-size:13.5px;color:var(--ink2);margin-top:12px;line-height:1.65}
-    .admin-note{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(135deg,var(--blue-soft),rgba(79,110,247,.04));border:1px solid rgba(79,110,247,.15);border-radius:var(--r);padding:12px 14px;margin-top:14px}
-    .admin-note-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-    .admin-note-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-bottom:3px}
-    .admin-note-text{font-size:13px;color:var(--ink2);line-height:1.6}
-    .c-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-    .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
-    .filter-sel{width:auto;min-width:145px;padding:8px 12px;font-size:13px;border-radius:var(--r)}
-    .filter-count{font-size:12px;color:var(--muted);margin-left:auto;font-weight:500}
-    .empty{text-align:center;padding:64px 20px;color:var(--muted)}
-    .empty-icon{font-size:52px;margin-bottom:14px;opacity:.35}
-    .empty h3{font-size:17px;font-weight:700;margin-bottom:6px;color:var(--ink2)}
-    .empty p{font-size:13.5px}
-    .spin{width:22px;height:22px;border:2.5px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spinning .65s linear infinite;display:inline-block}
-    @keyframes spinning{to{transform:rotate(360deg)}}
-    .loading-wrap{display:flex;align-items:center;justify-content:center;gap:10px;padding:48px;color:var(--muted);font-size:13.5px}
-    .live-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--green);background:var(--green-soft);border:1px solid rgba(34,197,94,.2);padding:4px 10px;border-radius:99px}
-    .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:livePulse 1.8s infinite}
-    @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-    .check-label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--ink2);padding:12px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);transition:all .2s}
-    .check-label:hover{border-color:var(--blue);background:var(--blue-soft)}
-    .check-label input{width:16px;height:16px;flex-shrink:0;accent-color:var(--blue)}
-    .dash-tip{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--blue-soft),rgba(139,92,246,.06));border:1px solid rgba(79,110,247,.18);border-radius:var(--r-lg);padding:16px 20px;margin-top:6px}
-    .dash-tip-icon{font-size:22px;flex-shrink:0}
-    .dash-tip-text{font-size:13.5px;color:var(--ink2);line-height:1.6}
-    .dash-tip-text strong{color:var(--blue)}
-    .section-sep{height:1px;background:var(--border);margin:24px 0}
-    .recent-label{font-size:17px;font-weight:700;margin-bottom:14px}
-
-    @media(max-width:900px){.auth-panel{display:none}.auth-form-wrap{width:100%;padding:40px 28px}.stats{grid-template-columns:1fr 1fr}}
-    @media(max-width:680px){.sidebar{display:none}.main{padding:20px}.stats{grid-template-columns:1fr 1fr}}
-    @media(max-width:440px){.stats{grid-template-columns:1fr}.otp-box{width:32px;height:42px;font-size:16px}.otp-row{gap:5px}}
-  </style>
-  -->
 </head>
 <body>
 
-<div id="toast-wrap"></div>
+<div id="toast-wrap" aria-live="polite"></div>
 
-<!-- ═══════════════════════════════════════════════════════
-     AUTH SCREEN
-═══════════════════════════════════════════════════════ -->
+<!-- AUTH SCREEN -->
 <div id="auth-screen">
 
-  <!-- Left panel -->
   <div class="auth-panel">
-    <div class="auth-panel-logo">VoiceUp</div>
-    <div class="auth-panel-tagline">A safe space for employees to share feedback, raise concerns, and drive change.</div>
-    <div class="auth-panel-features">
-      <div class="auth-feature"><div class="auth-feature-dot">🔒</div>Anonymous submissions supported</div>
-      <div class="auth-feature"><div class="auth-feature-dot">⚡</div>Real-time status updates</div>
-      <div class="auth-feature"><div class="auth-feature-dot">🏢</div>Department-level routing</div>
-      <div class="auth-feature"><div class="auth-feature-dot">✅</div>Full audit trail</div>
+    <div class="auth-panel-inner">
+      <div class="auth-brand">
+        <div class="auth-brand-mark">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M4.5 11C4.5 7.41 7.41 4.5 11 4.5C14.59 4.5 17.5 7.41 17.5 11V14.5C17.5 15.33 16.83 16 16 16H6C5.17 16 4.5 15.33 4.5 14.5V11Z" fill="white" fill-opacity="0.9"/>
+            <circle cx="11" cy="11" r="2.5" fill="#132443"/>
+          </svg>
+        </div>
+        <span>VoiceUp</span>
+      </div>
+
+      <div class="auth-headline">Every voice<br/><em>deserves to be heard.</em></div>
+      <p class="auth-tagline">A secure platform for employee feedback, complaints, and suggestions — built for transparency.</p>
+
+      <div class="auth-features">
+        <div class="auth-feature"><div class="auth-feature-icon">🔒</div><span>Anonymous submissions supported</span></div>
+        <div class="auth-feature"><div class="auth-feature-icon">⚡</div><span>Real-time status updates</span></div>
+        <div class="auth-feature"><div class="auth-feature-icon">🏢</div><span>Department-level routing</span></div>
+        <div class="auth-feature"><div class="auth-feature-icon">✅</div><span>Full audit trail &amp; history</span></div>
+      </div>
+
+      <div class="auth-preview-card">
+        <div class="apc-header">
+          <div class="apc-status-dot"></div>
+          <span>Feedback resolved · 2 min ago</span>
+        </div>
+        <div class="apc-title">Canteen facilities improvement</div>
+        <div class="apc-tags">
+          <span class="apc-tag">HR Department</span>
+          <span class="apc-tag">Suggestion</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Right form -->
+  <!-- Auth Form Panel -->
   <div class="auth-form-wrap">
     <div class="auth-form-inner">
 
-      <!-- ─── VIEW A: Normal login / signup ─── -->
+      <!-- VIEW: Login / Signup -->
       <div id="view-main">
-        <div class="auth-heading">Welcome back</div>
-        <div class="auth-sub">Sign in or create your account below</div>
+        <div class="auth-form-logo">VoiceUp</div>
+        <h1 class="auth-heading">Welcome back</h1>
+        <p class="auth-sub">Sign in to your account or create a new one</p>
 
         <div class="role-wrap">
           <div class="role-btn active" id="role-employee" onclick="selectRole('employee')">
-            <div class="role-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <span class="r-icon">👤</span><div class="r-label">Employee</div>
+            <div class="role-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="r-icon">👤</span>
+            <span class="r-label">Employee</span>
           </div>
           <div class="role-btn" id="role-admin" onclick="selectRole('admin')">
-            <div class="role-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <span class="r-icon">🛡️</span><div class="r-label">Admin</div>
+            <div class="role-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="r-icon">🛡️</span>
+            <span class="r-label">Administrator</span>
           </div>
         </div>
 
         <div class="tab-row">
-          <button class="tab-btn active" id="tab-login"  onclick="switchTab('login')">Sign In</button>
-          <button class="tab-btn"        id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+          <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+          <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
         </div>
 
         <!-- Login -->
         <div id="login-form">
           <div class="fg">
-            <label>Email address</label>
+            <label for="login-email">Email address</label>
             <div class="input-wrap"><span class="i-icon">✉️</span>
-              <input type="email" id="login-email" placeholder="you@company.com" />
+              <input type="email" id="login-email" placeholder="you@company.com" autocomplete="email" />
             </div>
           </div>
           <div class="fg">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-              <label style="margin-bottom:0">Password</label>
+            <div class="fg-label-row">
+              <label for="login-password" style="margin-bottom:0">Password</label>
               <a href="#" class="forgot-link" onclick="showView('fp');return false">Forgot password?</a>
             </div>
             <div class="input-wrap pw-wrap has-toggle">
               <span class="i-icon">🔑</span>
-              <input type="password" id="login-password" placeholder="••••••••" />
+              <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
               <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)">👁️</button>
             </div>
           </div>
@@ -347,16 +105,20 @@
         <!-- Signup -->
         <div id="signup-form" class="hidden">
           <div class="fg"><label>Full Name</label>
-            <div class="input-wrap"><span class="i-icon">✏️</span><input type="text" id="signup-name" placeholder="Jane Smith" /></div>
+            <div class="input-wrap"><span class="i-icon">✏️</span>
+              <input type="text" id="signup-name" placeholder="Jane Smith" autocomplete="name" />
+            </div>
           </div>
           <div class="fg"><label>Email address</label>
-            <div class="input-wrap"><span class="i-icon">✉️</span><input type="email" id="signup-email" placeholder="you@company.com" /></div>
+            <div class="input-wrap"><span class="i-icon">✉️</span>
+              <input type="email" id="signup-email" placeholder="you@company.com" autocomplete="email" />
+            </div>
           </div>
           <div class="fg">
-            <label>Password <span style="color:var(--faint);font-weight:400">(min 6 chars)</span></label>
+            <label>Password <span class="label-hint">(min 6 chars)</span></label>
             <div class="input-wrap pw-wrap has-toggle">
               <span class="i-icon">🔑</span>
-              <input type="password" id="signup-password" placeholder="••••••••" oninput="checkStrength(this.value)" />
+              <input type="password" id="signup-password" placeholder="••••••••" oninput="checkStrength(this.value)" autocomplete="new-password" />
               <button type="button" class="pw-toggle" onclick="togglePw('signup-password',this)">👁️</button>
             </div>
             <div class="pw-strength" id="signup-strength" style="display:none">
@@ -367,38 +129,17 @@
           <button class="btn btn-primary w-full mt-3" id="signup-btn" onclick="handleSignup()">Create Account →</button>
         </div>
 
-        <p class="text-sm muted mt-3" style="text-align:center">
+        <p class="auth-switch-text">
           <span id="switch-text">Don't have an account?</span>
-          <a href="#" id="switch-link" onclick="switchTab(currentTab==='login'?'signup':'login');return false"
-             style="color:var(--blue);font-weight:600;margin-left:5px;text-decoration:none">Sign up</a>
+          <a href="#" id="switch-link" onclick="switchTab(currentTab==='login'?'signup':'login');return false">Sign up</a>
         </p>
       </div><!-- /view-main -->
 
 
-      <!-- ─── VIEW B: Forgot Password (3 steps inside one view) ─── -->
-      <!--
-        HOW THIS WORKS (beginner explanation):
-        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        STEP 1 — User enters their email.
-                 We call Supabase's signInWithOtp() which sends a
-                 6-digit OTP code to that email. No redirect link.
-
-        STEP 2 — User types the 6-digit OTP code into the 6 boxes.
-                 We call Supabase's verifyOtp() to check if the code
-                 is correct. If yes, Supabase logs them in silently
-                 and gives us a session — but we DON'T show the app.
-                 We move to step 3 instead.
-
-        STEP 3 — User types new password + confirms it.
-                 We call sb.auth.updateUser({ password: newPassword })
-                 which updates it using the active session from step 2.
-                 Then we sign them out and send them to the login screen.
-      -->
+      <!-- VIEW: Forgot Password -->
       <div id="view-fp" class="hidden">
-
         <button class="back-btn" onclick="showView('main')">← Back to Sign In</button>
 
-        <!-- Progress indicator (3 dots) -->
         <div class="fp-progress">
           <div class="fp-prog-step">
             <div class="fp-prog-dot active" id="prog-dot-1">1</div>
@@ -416,35 +157,28 @@
           </div>
         </div>
 
-        <!-- STEP 1: Email entry -->
+        <!-- Step 1 -->
         <div id="fp-s1">
-          <div style="margin-bottom:20px">
-            <div class="auth-heading" style="font-size:21px">Reset your password</div>
-            <div class="auth-sub" style="margin-bottom:0">We'll send an 8-digit OTP to your email. No links, no redirects.</div>
-          </div>
+          <h2 class="auth-heading" style="font-size:21px">Reset your password</h2>
+          <p class="auth-sub" style="margin-bottom:18px">We'll send an 8-digit OTP to your email.</p>
           <div class="fg">
             <label>Your registered email</label>
             <div class="input-wrap"><span class="i-icon">✉️</span>
-              <input type="email" id="fp-email" placeholder="you@company.com"
-                     onkeydown="if(event.key==='Enter')sendOtp()" />
+              <input type="email" id="fp-email" placeholder="you@company.com" onkeydown="if(event.key==='Enter')sendOtp()" />
             </div>
             <div class="err hidden" id="fp-email-err">⚠ Please enter a valid email address.</div>
           </div>
           <div class="info-box mt-2" style="margin-bottom:16px">
             <span class="info-box-icon">💡</span>
-            <span>An <strong>8-digit OTP code</strong> will arrive in a "Reset Password" email. Copy the number and enter it on the next screen — no links to click.</span>
+            <span>An <strong>8-digit OTP code</strong> will arrive in your inbox. No links — just the number.</span>
           </div>
           <button class="btn btn-primary w-full" id="fp-send-btn" onclick="sendOtp()">Send OTP Code →</button>
         </div>
 
-        <!-- STEP 2: OTP verification -->
+        <!-- Step 2 -->
         <div id="fp-s2" class="hidden">
-          <div style="margin-bottom:20px">
-            <div class="auth-heading" style="font-size:21px">Enter the OTP</div>
-            <div class="auth-sub" style="margin-bottom:0">Check your email — we sent an 8-digit code to <strong id="fp-otp-email-display" style="color:var(--ink)"></strong></div>
-          </div>
-
-          <!-- 8 individual OTP boxes -->
+          <h2 class="auth-heading" style="font-size:21px">Enter the OTP</h2>
+          <p class="auth-sub" style="margin-bottom:18px">Check your email — code sent to <strong id="fp-otp-email-display" style="color:var(--ink)"></strong></p>
           <div class="otp-row">
             <input class="otp-box" id="otp-0" type="text" inputmode="numeric" maxlength="1" />
             <input class="otp-box" id="otp-1" type="text" inputmode="numeric" maxlength="1" />
@@ -457,10 +191,7 @@
           </div>
           <div class="otp-hint">Type the 8-digit code from your email</div>
           <div class="err hidden" style="text-align:center;margin-top:6px" id="otp-err">⚠ Invalid OTP. Please check and try again.</div>
-
           <button class="btn btn-primary w-full mt-3" id="fp-verify-btn" onclick="verifyOtp()" disabled>Verify OTP →</button>
-
-          <!-- Resend with countdown -->
           <div class="resend-row">
             <span>Didn't receive it?</span>
             <button class="resend-btn" id="resend-btn" onclick="resendOtp()" disabled>
@@ -469,18 +200,15 @@
           </div>
         </div>
 
-        <!-- STEP 3: New password -->
+        <!-- Step 3 -->
         <div id="fp-s3" class="hidden">
-          <div style="margin-bottom:20px">
-            <div class="auth-heading" style="font-size:21px">Set new password</div>
-            <div class="auth-sub" style="margin-bottom:0">Identity verified ✅ — choose a strong new password below.</div>
-          </div>
+          <h2 class="auth-heading" style="font-size:21px">Set new password</h2>
+          <p class="auth-sub" style="margin-bottom:18px">Identity verified ✅ — choose a strong new password.</p>
           <div class="fg">
             <label>New Password</label>
             <div class="input-wrap pw-wrap has-toggle">
               <span class="i-icon">🔑</span>
-              <input type="password" id="new-pw" placeholder="At least 8 characters"
-                     oninput="checkStrength(this.value,'new-pw-fill','new-pw-text','new-pw-strength')" />
+              <input type="password" id="new-pw" placeholder="At least 8 characters" oninput="checkStrength(this.value,'new-pw-fill','new-pw-text','new-pw-strength')" />
               <button type="button" class="pw-toggle" onclick="togglePw('new-pw',this)">👁️</button>
             </div>
             <div class="pw-strength" id="new-pw-strength" style="display:none">
@@ -500,7 +228,6 @@
           </div>
           <button class="btn btn-primary w-full mt-2" id="fp-update-btn" onclick="updatePassword()">Update Password →</button>
         </div>
-
       </div><!-- /view-fp -->
 
     </div>
@@ -508,65 +235,132 @@
 </div><!-- /auth-screen -->
 
 
-<!-- ═══════════════════════════════════════════════════════
-     APP SCREEN (completely unchanged)
-═══════════════════════════════════════════════════════ -->
+<!-- APP SCREEN -->
 <div id="app-screen" class="hidden">
   <aside class="sidebar">
-    <div class="sb-logo">VoiceUp</div>
-    <div class="sb-badge"><span class="sb-dot"></span><span id="sb-role-text">Employee</span></div>
-    <div class="sb-section">Navigation</div>
+    <div class="sb-top">
+      <div class="sb-logo">
+        <div class="sb-logo-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2.5 8C2.5 4.96 4.96 2.5 8 2.5C11.04 2.5 13.5 4.96 13.5 8V11C13.5 11.83 12.83 12.5 12 12.5H4C3.17 12.5 2.5 11.83 2.5 11V8Z" fill="white" fill-opacity="0.85"/>
+            <circle cx="8" cy="8" r="2" fill="#132443"/>
+          </svg>
+        </div>
+        <span class="sb-logo-text">VoiceUp</span>
+      </div>
+      <div class="sb-role-chip" id="sb-role-text">Employee</div>
+    </div>
+
+    <div class="sb-section-label">Menu</div>
+
     <nav id="employee-nav">
-      <button class="nav-item active" data-page="my-complaints" onclick="showPage('my-complaints')"><span class="nav-icon">📋</span> My Complaints</button>
-      <button class="nav-item" data-page="submit-complaint" onclick="showPage('submit-complaint')"><span class="nav-icon">✍️</span> Submit New</button>
+      <button class="nav-item active" data-page="my-complaints" onclick="showPage('my-complaints')">
+        <span class="nav-icon">📋</span>My Complaints
+      </button>
+      <button class="nav-item" data-page="submit-complaint" onclick="showPage('submit-complaint')">
+        <span class="nav-icon">✍️</span>Submit New
+      </button>
     </nav>
     <nav id="admin-nav" class="hidden">
-      <button class="nav-item active" data-page="admin-dashboard" onclick="showPage('admin-dashboard')"><span class="nav-icon">📊</span> Dashboard</button>
-      <button class="nav-item" data-page="all-complaints" onclick="showPage('all-complaints')"><span class="nav-icon">📋</span> All Complaints</button>
+      <button class="nav-item active" data-page="admin-dashboard" onclick="showPage('admin-dashboard')">
+        <span class="nav-icon">📊</span>Dashboard
+      </button>
+      <button class="nav-item" data-page="all-complaints" onclick="showPage('all-complaints')">
+        <span class="nav-icon">📋</span>All Complaints
+      </button>
     </nav>
+
     <div class="sb-footer">
       <div class="sb-user">
         <div class="sb-avatar" id="sb-avatar">U</div>
-        <div><div class="sb-uname" id="sb-name">Loading…</div><div class="sb-uemail" id="sb-email"></div></div>
+        <div>
+          <div class="sb-uname" id="sb-name">Loading…</div>
+          <div class="sb-uemail" id="sb-email"></div>
+        </div>
       </div>
-      <button class="nav-item" onclick="handleLogout()" style="color:var(--rose)"><span class="nav-icon">🚪</span> Sign Out</button>
+      <button class="nav-item nav-signout" onclick="handleLogout()">
+        <span class="nav-icon">🚪</span>Sign Out
+      </button>
     </div>
   </aside>
 
   <main class="main">
+
+    <!-- My Complaints -->
     <div id="page-my-complaints" class="page">
       <div class="ph">
-        <div><div class="ph-title">My Complaints</div><div class="ph-sub">Track all your submitted feedback and complaints</div></div>
-        <div class="live-badge"><span class="live-dot"></span> Live updates</div>
+        <div><h1 class="ph-title">My Complaints</h1><p class="ph-sub">Track all your submitted feedback and complaints</p></div>
+        <div class="live-badge"><span class="live-dot"></span>Live updates</div>
       </div>
-      <div id="my-complaints-list"><div class="loading-wrap"><span class="spin"></span> Loading your complaints…</div></div>
+      <div id="my-complaints-list"><div class="loading-wrap"><span class="spin"></span> Loading…</div></div>
     </div>
 
+    <!-- Submit Complaint -->
     <div id="page-submit-complaint" class="page hidden">
-      <div class="ph"><div><div class="ph-title">Submit Feedback</div><div class="ph-sub">Your voice matters — we'll make sure it's heard</div></div></div>
-      <div class="card" style="max-width:580px">
-        <div class="fg-row">
-          <div class="fg"><label>Type</label><select id="complaint-type"><option value="Complaint">🚨 Complaint</option><option value="Feedback">💬 Feedback</option><option value="Suggestion">💡 Suggestion</option></select></div>
-          <div class="fg"><label>Department</label><select id="complaint-dept"><option value="">Select department…</option></select></div>
-        </div>
-        <div class="fg"><label>Title <span style="color:var(--rose)">*</span></label><input type="text" id="complaint-title" placeholder="Brief summary of your issue" maxlength="100" /><div class="err hidden" id="err-title">⚠ Please enter a title.</div></div>
-        <div class="fg">
-          <label>Description <span style="color:var(--rose)">*</span></label>
-          <textarea id="complaint-desc" rows="5" placeholder="Describe the issue in detail…" maxlength="1000"></textarea>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
-            <div class="err hidden" id="err-desc">⚠ Description must be at least 20 characters.</div>
-            <span class="text-xs muted" id="char-count" style="margin-left:auto">0 / 1000</span>
+      <div class="ph">
+        <div><h1 class="ph-title">Submit Feedback</h1><p class="ph-sub">Your voice matters — we'll make sure it's heard</p></div>
+      </div>
+      <div class="submit-layout">
+        <div class="card submit-card">
+          <div class="fg-row">
+            <div class="fg"><label>Type</label>
+              <select id="complaint-type">
+                <option value="Complaint">🚨 Complaint</option>
+                <option value="Feedback">💬 Feedback</option>
+                <option value="Suggestion">💡 Suggestion</option>
+              </select>
+            </div>
+            <div class="fg"><label>Department</label>
+              <select id="complaint-dept"><option value="">Select department…</option></select>
+            </div>
           </div>
+          <div class="fg">
+            <label>Title <span class="req-star">*</span></label>
+            <input type="text" id="complaint-title" placeholder="Brief summary of your issue" maxlength="100" />
+            <div class="err hidden" id="err-title">⚠ Please enter a title.</div>
+          </div>
+          <div class="fg">
+            <div class="fg-label-row">
+              <label style="margin-bottom:0">Description <span class="req-star">*</span></label>
+              <span class="char-count-badge" id="char-count">0 / 1000</span>
+            </div>
+            <textarea id="complaint-desc" rows="5" placeholder="Describe the issue in detail…" maxlength="1000"></textarea>
+            <div class="err hidden" id="err-desc">⚠ Description must be at least 20 characters.</div>
+          </div>
+          <div class="fg">
+            <label class="check-label">
+              <input type="checkbox" id="complaint-anon" />
+              <div class="check-label-body">
+                <span class="check-label-title">🎭 Submit anonymously</span>
+                <span class="check-label-sub">Your name won't be shown to admins</span>
+              </div>
+            </label>
+          </div>
+          <button class="btn btn-primary btn-submit-full" id="submit-btn" onclick="submitComplaint()">Submit Complaint →</button>
         </div>
-        <div class="fg"><label class="check-label"><input type="checkbox" id="complaint-anon" />🎭 Submit anonymously — your name won't be shown to admins</label></div>
-        <button class="btn btn-primary" id="submit-btn" onclick="submitComplaint()" style="width:100%;justify-content:center">Submit Complaint →</button>
+
+        <aside class="submit-tips">
+          <div class="tip-item">
+            <div class="tip-icon">💡</div>
+            <div><div class="tip-title">Be specific</div><div class="tip-text">Include dates, names and locations to help us investigate faster.</div></div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">🎯</div>
+            <div><div class="tip-title">Stay constructive</div><div class="tip-text">Constructive feedback leads to faster, better resolutions.</div></div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">📡</div>
+            <div><div class="tip-title">Track progress</div><div class="tip-text">You'll see real-time status updates on the My Complaints page.</div></div>
+          </div>
+        </aside>
       </div>
     </div>
 
+    <!-- Admin Dashboard -->
     <div id="page-admin-dashboard" class="page hidden">
       <div class="ph">
-        <div><div class="ph-title">Dashboard</div><div class="ph-sub">Overview of all employee complaints across departments</div></div>
-        <div class="live-badge"><span class="live-dot"></span> Live updates</div>
+        <div><h1 class="ph-title">Dashboard</h1><p class="ph-sub">Overview of all employee complaints across departments</p></div>
+        <div class="live-badge"><span class="live-dot"></span>Live updates</div>
       </div>
       <div class="stats">
         <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="stat-total">—</div><div class="stat-lbl">Total</div></div>
@@ -574,16 +368,20 @@
         <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-val" id="stat-progress" style="color:var(--blue)">—</div><div class="stat-lbl">In Progress</div></div>
         <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" id="stat-resolved" style="color:var(--green)">—</div><div class="stat-lbl">Resolved</div></div>
       </div>
-      <div class="dash-tip"><div class="dash-tip-icon">💡</div><div class="dash-tip-text">Head to <strong>All Complaints</strong> to review, assign and update statuses. Employees see changes in real-time.</div></div>
+      <div class="dash-tip">
+        <div class="dash-tip-icon">💡</div>
+        <div class="dash-tip-text">Head to <strong>All Complaints</strong> to review, assign and update statuses. Employees see changes in real-time.</div>
+      </div>
       <div class="section-sep"></div>
       <div class="recent-label">Recent Activity</div>
       <div id="dash-recent"><div class="loading-wrap"><span class="spin"></span></div></div>
     </div>
 
+    <!-- All Complaints -->
     <div id="page-all-complaints" class="page hidden">
       <div class="ph">
-        <div><div class="ph-title">All Complaints</div><div class="ph-sub">Manage, assign and resolve employee feedback</div></div>
-        <div class="live-badge"><span class="live-dot"></span> Live updates</div>
+        <div><h1 class="ph-title">All Complaints</h1><p class="ph-sub">Manage, assign and resolve employee feedback</p></div>
+        <div class="live-badge"><span class="live-dot"></span>Live updates</div>
       </div>
       <div class="filters">
         <select class="filter-sel" id="filter-status" onchange="applyFilters()"><option value="">All Statuses</option><option value="Pending">Pending</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Rejected">Rejected</option></select>
@@ -593,13 +391,17 @@
       </div>
       <div id="all-complaints-list"><div class="loading-wrap"><span class="spin"></span> Loading complaints…</div></div>
     </div>
-  </main>
-</div>
 
-<!-- Modals (unchanged) -->
+  </main>
+</div><!-- /app-screen -->
+
+<!-- MODALS -->
 <div class="overlay hidden" id="edit-modal" onclick="overlayClick(event,'edit-modal')">
   <div class="modal">
-    <div class="modal-title">Edit Complaint</div><div class="modal-sub">You can only edit complaints that are still Pending.</div>
+    <div class="modal-header">
+      <div><div class="modal-title">Edit Complaint</div><div class="modal-sub">You can only edit complaints that are still Pending.</div></div>
+      <button class="modal-close-btn" onclick="closeModal('edit-modal')">✕</button>
+    </div>
     <input type="hidden" id="edit-id" />
     <div class="fg"><label>Title</label><input type="text" id="edit-title" maxlength="100" /></div>
     <div class="fg"><label>Description</label><textarea id="edit-desc" rows="5" maxlength="1000"></textarea></div>
@@ -607,23 +409,30 @@
     <div class="modal-actions"><button class="btn btn-primary" onclick="saveEdit()">Save Changes</button><button class="btn btn-ghost" onclick="closeModal('edit-modal')">Cancel</button></div>
   </div>
 </div>
+
 <div class="overlay hidden" id="status-modal" onclick="overlayClick(event,'status-modal')">
   <div class="modal">
-    <div class="modal-title">Update Complaint</div><div class="modal-sub">Changes are pushed to the employee in real-time via WebSocket.</div>
+    <div class="modal-header">
+      <div><div class="modal-title">Update Complaint</div><div class="modal-sub">Changes are pushed to the employee in real-time.</div></div>
+      <button class="modal-close-btn" onclick="closeModal('status-modal')">✕</button>
+    </div>
     <input type="hidden" id="status-modal-id" />
     <div class="fg-row">
       <div class="fg"><label>Assign Department</label><select id="status-dept"></select></div>
-      <div class="fg"><label>Status</label><select id="status-value"><option value="Pending">⏳ Pending</option><option value="In Progress">🔄 In Progress</option><option value="Resolved">✅ Resolved</option><option value="Rejected">❌ Rejected</option></select></div>
+      <div class="fg"><label>Status</label>
+        <select id="status-value">
+          <option value="Pending">⏳ Pending</option>
+          <option value="In Progress">🔄 In Progress</option>
+          <option value="Resolved">✅ Resolved</option>
+          <option value="Rejected">❌ Rejected</option>
+        </select>
+      </div>
     </div>
-    <div class="fg"><label>Admin Notes <span style="color:var(--faint);font-weight:400">(visible to employee)</span></label><textarea id="status-notes" rows="3" placeholder="Add a note or update for the employee…"></textarea></div>
+    <div class="fg"><label>Admin Notes <span class="label-hint">(visible to employee)</span></label><textarea id="status-notes" rows="3" placeholder="Add a note or update for the employee…"></textarea></div>
     <div class="modal-actions"><button class="btn btn-primary" onclick="saveStatus()">Save Update</button><button class="btn btn-ghost" onclick="closeModal('status-modal')">Cancel</button></div>
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════════════════
-     JAVASCRIPT
-═════════════════════════════════════════════════════════ -->
 <script type="module" src="app.js"></script>
 </body>
 </html>
