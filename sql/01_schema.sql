@@ -105,7 +105,21 @@ CREATE TRIGGER set_updated_at_complaints
 
 
 -- ─────────────────────────────────────────────────────────────
--- STEP 6: AUTO-CREATE EMPLOYEE PROFILE ON SIGNUP
+-- STEP 6: FUNCTION TO CHECK IF EMAIL EXISTS
+-- Used in signup to prevent duplicate accounts
+-- ─────────────────────────────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.check_email_exists(email_input TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM auth.users WHERE email = email_input
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-- ─────────────────────────────────────────────────────────────
+-- STEP 7: AUTO-CREATE EMPLOYEE PROFILE ON SIGNUP
 -- When a new user signs up through Supabase Auth,
 -- this function automatically creates their employee record.
 -- ─────────────────────────────────────────────────────────────
@@ -143,7 +157,7 @@ CREATE TRIGGER on_auth_user_created
 
 
 -- ─────────────────────────────────────────────────────────────
--- STEP 7: HELPER FUNCTION - Check if current user is admin
+-- STEP 8: HELPER FUNCTION - Check if current user is admin
 -- Used in RLS policies below
 -- ─────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.is_admin()

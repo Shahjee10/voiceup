@@ -433,6 +433,18 @@ async function handleSignup() {
   if (!name)                          { toast('Please enter your full name.', 'error'); return; }
   if (!email || !email.includes('@')) { toast('Please enter a valid email.', 'error'); return; }
   if (pass.length < 6)                { toast('Password must be at least 6 characters.', 'error'); return; }
+
+  // Check if user already exists
+  const { data: exists, error: checkError } = await sb.rpc('check_email_exists', { email_input: email });
+  if (checkError) {
+    toast('Error checking email. Please try again.', 'error');
+    return;
+  }
+  if (exists) {
+    toast('User already exists with this email.', 'error');
+    return;
+  }
+
   setBtnLoad('signup-btn', true, 'Creating account…');
   const { error } = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name, role: currentRole } } });
   setBtnLoad('signup-btn', false, 'Create Account →');
